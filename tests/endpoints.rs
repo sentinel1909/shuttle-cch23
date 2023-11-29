@@ -1,7 +1,5 @@
 // tests/endpoints.rs
 
-#[cfg(test)]
-
 // tests for Challenge -1
 mod endpoint_tests {
 
