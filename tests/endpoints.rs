@@ -3,17 +3,38 @@
 // tests for Challenge -1
 mod endpoint_tests {
 
-    #[test]
-    fn test_root() {
+    use cch23_sentinel1909::router::Router;
+    use hyper::body::Body;
+    use hyper::Request;
+    use tower_test::mock::spawn::Spawn;   
+
+    #[tokio::test]
+    async fn test_root() {
+        let router = Router::create();
+        let mut mock = Spawn::new(router.clone());
+
+        let request = Request::builder()
+            .uri("/")
+            .body(Body::empty())
+            .unwrap();
         
-        let response = reqwest::blocking::get("http://127.0.0.1:8000").unwrap();
-        assert!(response.status().is_success());
-        assert_eq!(Some(0), response.content_length());
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
     }
 
-    #[test]
-    fn test_fake_error() {
-        let response = reqwest::blocking::get("http://127.0.0.1:8000/-1/error").unwrap();
-        assert!(response.status().is_server_error());
+    #[tokio::test]
+    async fn test_fake_error() {
+        let router = Router::create();
+        let mut mock = Spawn::new(router.clone());
+
+        let request = Request::builder()
+            .uri("/-1/error")
+            .body(Body::empty())
+            .unwrap();
+        
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 500);
     }
 }

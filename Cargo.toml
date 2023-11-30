@@ -19,4 +19,4 @@ tower = { version = "0.4.13", features = ["full"] }
 tokio = "1.26.0"
 
 [dev-dependencies]
-reqwest = { version = "0.11.22", features = [ "blocking" ] }
+tower-test = "0.4.0"

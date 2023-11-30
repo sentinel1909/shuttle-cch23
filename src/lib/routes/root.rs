@@ -9,5 +9,5 @@ use hyper::{Response, StatusCode};
 pub fn root() -> Result<Response<Body>, Error> {
     Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(""))
+        .body(Body::empty())
 }
