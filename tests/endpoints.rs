@@ -4,6 +4,7 @@
 mod endpoint_tests {
 
     use cch23_sentinel1909::router::Router;
+    use hyper::body;
     use hyper::body::Body;
     use hyper::Request;
     use tower_test::mock::spawn::Spawn;   
@@ -21,6 +22,8 @@ mod endpoint_tests {
         let response = mock.call(request);
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("").as_bytes());
     }
 
     #[tokio::test]
@@ -36,5 +39,7 @@ mod endpoint_tests {
         let response = mock.call(request);
         let response = response.await.unwrap();
         assert_eq!(response.status(), 500);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("Internal Server Error").as_bytes());
     }
 }
