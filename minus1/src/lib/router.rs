@@ -1,6 +1,7 @@
 // src/lib/router.rs
 
 // dependencies
+use day1_endpoints;
 use crate::routes::not_found::not_found;
 use crate::routes::root::root;
 use hyper::{Body, Request, Response, StatusCode};
