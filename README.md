@@ -15,5 +15,5 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
 - re-factored test module using `tower-test`
 
 ## 2023-11-30
-- re-factoed into a workspace format, with individual crates for each challenge
+- re-factored into a workspace format, with individual crates for each challenge
 - set up workspace configuration for the Challenge; binary will continue to live in the minus1 crate, individual challenge endpoints will be in a separate crate for each day of the challenge

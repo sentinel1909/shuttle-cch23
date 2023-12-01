@@ -10,3 +10,4 @@ name = "day1_endpoints"
 path = "src/lib.rs"
 
 [dependencies]
+hyper = { version = "0.14.27", features = ["full"] }

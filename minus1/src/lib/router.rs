@@ -1,9 +1,9 @@
 // src/lib/router.rs
 
 // dependencies
-use day1_endpoints;
 use crate::routes::not_found::not_found;
 use crate::routes::root::root;
+use day1_endpoints::recalibrate;
 use hyper::{Body, Request, Response, StatusCode};
 use std::convert::Infallible;
 use std::future::Future;
@@ -46,6 +46,10 @@ impl Service<Request<Body>> for Router {
                 Err(_) => self.internal_server_error(),
             },
             "/-1/error" => self.internal_server_error(),
+            "/1/recalibrate" => match recalibrate() {
+                Ok(resp) => resp,
+                Err(_) => self.internal_server_error(),
+            },
             _ => match not_found() {
                 Ok(resp) => resp,
                 Err(_) => self.internal_server_error(),
