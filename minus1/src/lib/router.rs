@@ -10,6 +10,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use tower::Service;
+use url::Url;
 
 // a struct type to represent the app router
 #[derive(Clone)]
@@ -40,13 +41,19 @@ impl Service<Request<Body>> for Router {
     }
 
     fn call(&mut self, _req: Request<Body>) -> Self::Future {
-        let response = match _req.uri().path() {
+        let url = _req.uri().path();
+        let parsed_url = Url::parse(url).unwrap();
+        let url_path_segments = parsed_url
+            .path_segments()
+            .map(|c| c.collect::<Vec<_>>())
+            .expect("Unable to extract path segments from URL");
+        let response = match url {
             "/" => match root() {
                 Ok(resp) => resp,
                 Err(_) => self.internal_server_error(),
             },
             "/-1/error" => self.internal_server_error(),
-            "/1/recalibrate" => match recalibrate() {
+            "/1/" => match recalibrate(url_path_segments[1], url_path_segments[2]) {
                 Ok(resp) => resp,
                 Err(_) => self.internal_server_error(),
             },

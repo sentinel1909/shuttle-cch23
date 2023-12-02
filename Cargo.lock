@@ -219,6 +219,7 @@ dependencies = [
  "tokio",
  "tower",
  "tower-test",
+ "url",
 ]
 
 [[package]]

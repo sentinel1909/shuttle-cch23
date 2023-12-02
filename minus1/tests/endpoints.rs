@@ -48,15 +48,12 @@ mod endpoint_tests {
         let router = Router::create();
         let mut mock = Spawn::new(router.clone());
 
-        let request = Request::builder()
-            .uri("/1/recalibrate")
-            .body(Body::empty())
-            .unwrap();
+        let request = Request::builder().uri("/1/4/8").body(Body::empty()).unwrap();
 
         let response = mock.call(request);
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("1").as_bytes());
+        assert_eq!(body_bytes, String::from("1728").as_bytes());
     }
 }

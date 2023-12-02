@@ -8,13 +8,14 @@ use hyper::http::Error;
 use hyper::{Response, StatusCode};
 
 // function to handle the /1/<num1>/<num2> endpoint
-pub fn recalibrate() -> Result<Response<Body>, Error> {
-    // test input, need to replace with actual input from the request path
-    let num1 = 4;
-    let num2 = 8;
+pub fn recalibrate(num1: &str, num2: &str) -> Result<Response<Body>, Error> {
+    // convert the string values to integers
+    let num1 = num1.parse::<i32>().unwrap();
+    let num2 = num2.parse::<i32>().unwrap();
 
     // calculate the recalibrated the packet IDs
-    let recalibrated = num1 ^ num2;
+    let bitwise_or = (num1 ^ num2) as i32;
+    let recalibrated = bitwise_or.pow(3);
 
     // return the recalibrated packet ID
     Response::builder()
