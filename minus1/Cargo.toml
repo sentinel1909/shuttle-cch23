@@ -14,7 +14,7 @@ path = "src/lib/lib.rs"
 [dependencies]
 day1 = { path = "../day1" }
 hyper = { version = "0.14.27", features = ["full"] }
-shuttle-runtime = "0.34.1"
+shuttle-runtime = { version = "0.34.1", default-features = false }
 shuttle-tower = "0.34.1"
 tower = { version = "0.4.13", features = ["full"] }
 tower-http = { version = "0.4.4", features = ["full"] }

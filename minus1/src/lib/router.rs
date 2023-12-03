@@ -2,7 +2,7 @@
 
 // dependencies
 use crate::routes::root::root;
-use day1_endpoints::recalibrate;
+use day1_endpoints::calibrate_packet_ids;
 use hyper::{Body, Request, Response, StatusCode};
 use std::convert::Infallible;
 use std::future::Future;
@@ -46,22 +46,39 @@ impl Service<Request<Body>> for Router {
     }
 
     fn call(&mut self, request: Request<Body>) -> Self::Future {
+        // get the url from the request, convert it to a string
         let url = &request.uri().to_string();
+
+        // get the path portion from the request url
         let path = &request.uri().path();
-        let values: Vec<Result<i32, _>> = path.split('/').map(|s| s.parse::<i32>()).collect();
-        let path_segments: Vec<i32> = values.into_iter().filter_map(|value| value.ok()).collect();
-        if path_segments.len() > 1 {
-            let _dyn_path = format!("/1/{}/{}", path_segments[1], path_segments[2]);
+
+        // split the path into segments, parse the segments into i32 values
+        let path_segments: Vec<Result<i32, _>> = path
+            .split('/')
+            .map(|segment| segment.parse::<i32>())
+            .collect();
+
+        // filter out any segments that are not Ok, collect the remaining values into a vector
+        let values: Vec<i32> = path_segments
+            .into_iter()
+            .filter_map(|path_segment| path_segment.ok())
+            .collect();
+
+        // create a dynamic path based on the values in the vector
+        if values.len() > 1 {
+            let _dyn_path = format!("/1/{}/{}", values[1], values[2]);
         }
+
+        // match the url against the routes
         let response = match url.as_str() {
             "/" => match root() {
                 Ok(resp) => resp,
                 Err(_) => self.internal_server_error(),
             },
             "/-1/error" => self.internal_server_error(),
-            _dyn_path if path_segments.len() == 3 => match recalibrate(path_segments[1], path_segments[2]) {
+            _dyn_path if values.len() == 3 => match calibrate_packet_ids(values[1], values[2]) {
                 Ok(resp) => resp,
-                Err(_) => self.bad_request(),
+                Err(_) => self.internal_server_error(),
             },
             _ => self.bad_request(),
         };
