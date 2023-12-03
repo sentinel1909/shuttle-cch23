@@ -1,6 +1,6 @@
 // tests/endpoints.rs
 
-// tests for Challenge -1
+// tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
 mod endpoint_tests {
 
     use cch23_sentinel1909::router::Router;
@@ -42,13 +42,33 @@ mod endpoint_tests {
         assert_eq!(body_bytes, String::from("Internal Server Error").as_bytes());
     }
 
+    #[tokio::test]
+    async fn test_bad_request() {
+        let router = Router::create();
+        let mut mock = Spawn::new(router.clone());
+
+        let request = Request::builder()
+            .uri("/1/4/8/12/22")
+            .body(Body::empty())
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 400);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("Bad Request").as_bytes());
+    }
+
     // test for the day 1 challenge recalibrate endpoint
     #[tokio::test]
     async fn test_recalibrate() {
         let router = Router::create();
         let mut mock = Spawn::new(router.clone());
 
-        let request = Request::builder().uri("/1/4/8").body(Body::empty()).unwrap();
+        let request = Request::builder()
+            .uri("/1/4/8")
+            .body(Body::empty())
+            .unwrap();
 
         let response = mock.call(request);
         let response = response.await.unwrap();
