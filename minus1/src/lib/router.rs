@@ -2,7 +2,7 @@
 
 // dependencies
 use crate::routes::root::root;
-use day1_endpoints::calibrate_packet_ids;
+use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
 use hyper::{Body, Request, Response, StatusCode};
 use std::convert::Infallible;
 use std::future::Future;
@@ -49,6 +49,9 @@ impl Service<Request<Body>> for Router {
         // get the url from the request, convert it to a string
         let url = &request.uri().to_string();
 
+        // get the method from the request, convert it to a string
+        let method = &request.method().to_string();
+
         // get the path portion from the request url
         let path = &request.uri().path();
 
@@ -66,20 +69,32 @@ impl Service<Request<Body>> for Router {
 
         // create a dynamic path based on the values in the vector
         if values.len() > 1 {
-            let _dyn_path = format!("/1/{}/{}", values[1], values[2]);
+            let _calibrate_url = values
+                .iter()
+                .map(|&value| value.to_string())
+                .collect::<Vec<String>>()
+                .join("/");
         }
 
         // match the url against the routes
         let response = match url.as_str() {
-            "/" => match root() {
+            "/" if method == "GET" => match root() {
                 Ok(resp) => resp,
                 Err(_) => self.internal_server_error(),
             },
             "/-1/error" => self.internal_server_error(),
-            _dyn_path if values.len() == 3 => match calibrate_packet_ids(values[1], values[2]) {
-                Ok(resp) => resp,
-                Err(_) => self.internal_server_error(),
-            },
+            _calibrate_url if method == "GET" && values.len() == 3 => {
+                match calibrate_packet_ids(values) {
+                    Ok(resp) => resp,
+                    Err(_) => self.internal_server_error(),
+                }
+            }
+            _calibrate_url if method == "GET" && values.len() < 21 => {
+                match calibrate_sled_ids(values) {
+                    Ok(resp) => resp,
+                    Err(_) => self.bad_request(),
+                }
+            }
             _ => self.bad_request(),
         };
 

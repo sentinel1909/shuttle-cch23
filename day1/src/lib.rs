@@ -8,34 +8,24 @@ use hyper::http::Error;
 use hyper::{Response, StatusCode};
 
 // function to return the calibrated packet ID
-pub fn calibrate_packet_ids(num1: i32, num2: i32) -> Result<Response<Body>, Error> {
-    // calculate the recalibrated the packet ID
-    let bitwise_or = (num1 ^ num2) as i32;
-    let packet_id = bitwise_or.pow(3);
+pub fn calibrate_packet_ids(packets: Vec<i32>) -> Result<Response<Body>, Error> {
+    // recalibrated the packet ID
+    let bitwise_or = (packets[1] ^ packets[2]) as i32;
+    let calibrated_packet_id = bitwise_or.pow(3);
 
     // return the recalibrated packet ID
     Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(packet_id.to_string()))
+        .body(Body::from(calibrated_packet_id.to_string()))
 }
 
-// function to return the calibrated sled ID
-pub fn calibrate_sled_ids() -> Result<Response<Body>, Error> {
-    todo!();
-}
+pub fn calibrate_sled_ids(packets: Vec<i32>) -> Result<Response<Body>, Error> {
+    // recalibrate the sled ID
+    let bitwise_or = packets.iter().fold(1, |packet, &x| packet ^ x);
+    let calibrated_sled_id = bitwise_or.pow(3);
 
-#[cfg(test)]
-mod calibration_tests {
-
-    #[test]
-    fn test_calibrate_packet_id() {
-        let num1 = 1;
-        let num2 = 2;
-        assert_eq!(((num1 ^ num2) as i32).pow(3), 1);
-    }
-
-    #[test]
-    fn test_calibrate_sled_id() {
-        todo!();
-    }
+    // return the recalibrated sled ID
+    Response::builder()
+        .status(StatusCode::OK)
+        .body(Body::from(calibrated_sled_id.to_string()))
 }

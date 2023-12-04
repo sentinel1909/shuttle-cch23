@@ -1,6 +1,6 @@
 // tests/endpoints.rs
 
-// tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
+// endpoint integration tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
 mod endpoint_tests {
 
     // dependencies
@@ -48,19 +48,19 @@ mod endpoint_tests {
     }
 
     #[tokio::test]
-    async fn test_bad_request() {
+    async fn test_calibrate_sled_ids() {
         let mut mock = spawn_router();
 
         let request = Request::builder()
-            .uri("/1/4/8/12/22")
+            .uri("/1/4/5/8/10")
             .body(Body::empty())
             .unwrap();
 
         let response = mock.call(request);
         let response = response.await.unwrap();
-        assert_eq!(response.status(), 400);
+        assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("Bad Request").as_bytes());
+        assert_eq!(body_bytes, String::from("27").as_bytes());
     }
 
     // test for the day 1 challenge recalibrate endpoint
@@ -78,21 +78,5 @@ mod endpoint_tests {
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
         assert_eq!(body_bytes, String::from("1728").as_bytes());
-    }
-
-    #[tokio::test]
-    async fn calibrate_sled_ids() {
-        let mut mock = spawn_router();
-
-        let request = Request::builder()
-            .uri("/1/4/5/8/10")
-            .body(Body::empty())
-            .unwrap();
-
-        let response = mock.call(request);
-        let response = response.await.unwrap();
-        assert_eq!(response.status(), 200);
-        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("27").as_bytes());
     }
 }
