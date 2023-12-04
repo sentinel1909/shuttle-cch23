@@ -3,17 +3,23 @@
 // tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
 mod endpoint_tests {
 
+    // dependencies
     use cch23_sentinel1909::router::Router;
     use hyper::body;
     use hyper::body::Body;
     use hyper::Request;
     use tower_test::mock::spawn::Spawn;
 
+    // spawn a router for testing
+    fn spawn_router() -> Spawn<Router> {
+        let router = Router::create();
+        Spawn::new(router)
+    }
+
     // test for the -1 challenge root endpoint
     #[tokio::test]
     async fn test_root() {
-        let router = Router::create();
-        let mut mock = Spawn::new(router.clone());
+        let mut mock = spawn_router();
 
         let request = Request::builder().uri("/").body(Body::empty()).unwrap();
 
@@ -27,8 +33,7 @@ mod endpoint_tests {
     // test for the -1 challenge fake error endpoint
     #[tokio::test]
     async fn test_fake_error() {
-        let router = Router::create();
-        let mut mock = Spawn::new(router.clone());
+        let mut mock = spawn_router();
 
         let request = Request::builder()
             .uri("/-1/error")
@@ -44,8 +49,7 @@ mod endpoint_tests {
 
     #[tokio::test]
     async fn test_bad_request() {
-        let router = Router::create();
-        let mut mock = Spawn::new(router.clone());
+        let mut mock = spawn_router();
 
         let request = Request::builder()
             .uri("/1/4/8/12/22")
@@ -61,9 +65,8 @@ mod endpoint_tests {
 
     // test for the day 1 challenge recalibrate endpoint
     #[tokio::test]
-    async fn test_recalibrate() {
-        let router = Router::create();
-        let mut mock = Spawn::new(router.clone());
+    async fn test_calibrate_packet_ids() {
+        let mut mock = spawn_router();
 
         let request = Request::builder()
             .uri("/1/4/8")
@@ -75,5 +78,21 @@ mod endpoint_tests {
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
         assert_eq!(body_bytes, String::from("1728").as_bytes());
+    }
+
+    #[tokio::test]
+    async fn calibrate_sled_ids() {
+        let mut mock = spawn_router();
+
+        let request = Request::builder()
+            .uri("/1/4/5/8/10")
+            .body(Body::empty())
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("27").as_bytes());
     }
 }

@@ -7,7 +7,7 @@ use hyper::body::Body;
 use hyper::http::Error;
 use hyper::{Response, StatusCode};
 
-// function to handle the /1/<num1>/<num2> endpoint
+// function to return the calibrated packet ID
 pub fn calibrate_packet_ids(num1: i32, num2: i32) -> Result<Response<Body>, Error> {
     // calculate the recalibrated the packet ID
     let bitwise_or = (num1 ^ num2) as i32;
@@ -19,3 +19,23 @@ pub fn calibrate_packet_ids(num1: i32, num2: i32) -> Result<Response<Body>, Erro
         .body(Body::from(packet_id.to_string()))
 }
 
+// function to return the calibrated sled ID
+pub fn calibrate_sled_ids() -> Result<Response<Body>, Error> {
+    todo!();
+}
+
+#[cfg(test)]
+mod calibration_tests {
+
+    #[test]
+    fn test_calibrate_packet_id() {
+        let num1 = 1;
+        let num2 = 2;
+        assert_eq!(((num1 ^ num2) as i32).pow(3), 1);
+    }
+
+    #[test]
+    fn test_calibrate_sled_id() {
+        todo!();
+    }
+}

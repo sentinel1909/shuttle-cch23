@@ -273,6 +273,7 @@ dependencies = [
  "tower",
  "tower-http",
  "tower-test",
+ "tracing",
 ]
 
 [[package]]
