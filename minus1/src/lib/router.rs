@@ -99,6 +99,7 @@ impl Service<Request<Body>> for Router {
     }
 }
 
+// function to return a general internal server error
 fn internal_server_error() -> Response<Body> {
     Response::builder()
         .status(StatusCode::INTERNAL_SERVER_ERROR)
@@ -106,6 +107,7 @@ fn internal_server_error() -> Response<Body> {
         .unwrap()
 }
 
+// function to return a general bad request error
 fn bad_request() -> Response<Body> {
     Response::builder()
         .status(StatusCode::BAD_REQUEST)

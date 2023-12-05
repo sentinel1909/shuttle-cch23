@@ -79,4 +79,39 @@ mod endpoint_tests {
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
         assert_eq!(body_bytes, String::from("1728").as_bytes());
     }
+
+    #[tokio::test]
+    async fn test_get_strength() {
+        let mut mock = spawn_router();
+
+        let request = Request::builder()
+            .uri("/4/strength")
+            .method("POST")
+            .header("content-type", "application/json")
+            .body(Body::from(
+                r#"
+                [
+                    {
+                        "name": "Dasher",
+                        "strength": 6
+                    },
+                    {
+                        "name": "Dancer",
+                        "strength": 8
+                    },
+                    {
+                        "name": "Prancer",
+                        "strength": 14
+                    }
+                ]
+                "#,
+            ))
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("Combined Reindeer Strength: 28").as_bytes());
+    }
 }
