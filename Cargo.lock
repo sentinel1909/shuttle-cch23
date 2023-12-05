@@ -266,6 +266,7 @@ name = "cch23-sentinel1909"
 version = "0.1.0"
 dependencies = [
  "day1",
+ "day4",
  "hyper",
  "shuttle-runtime",
  "shuttle-tower",
@@ -411,6 +412,12 @@ dependencies = [
 [[package]]
 name = "day4"
 version = "0.1.0"
+dependencies = [
+ "futures-util",
+ "hyper",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "deranged"

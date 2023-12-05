@@ -3,6 +3,7 @@
 // dependencies
 use crate::routes::root::root;
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
+use day4_endpoints::get_strength;
 use hyper::{Body, Request, Response, StatusCode};
 use std::convert::Infallible;
 use std::future::Future;
@@ -36,10 +37,12 @@ impl Router {
 }
 
 // implement the Tower Service trait for the Router type
+
 impl Service<Request<Body>> for Router {
     type Response = Response<Body>;
     type Error = Infallible;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync>>;
+    type Future =
+        Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -47,13 +50,13 @@ impl Service<Request<Body>> for Router {
 
     fn call(&mut self, request: Request<Body>) -> Self::Future {
         // get the url from the request, convert it to a string
-        let url = &request.uri().to_string();
+        let url = request.uri().to_string();
 
         // get the method from the request, convert it to a string
-        let method = &request.method().to_string();
+        let method = request.method().to_string();
 
         // get the path portion from the request url
-        let path = &request.uri().path();
+        let path = request.uri().path();
 
         // split the path into segments, parse the segments into i32 values
         let path_segments: Vec<Result<i32, _>> = path
@@ -95,6 +98,10 @@ impl Service<Request<Body>> for Router {
                     Err(_) => self.bad_request(),
                 }
             }
+            "/4/strength" if method == "POST" => match get_strength(request) {
+                Ok(resp) => resp,
+                Err(_) => self.bad_request(),
+            },
             _ => self.bad_request(),
         };
 
