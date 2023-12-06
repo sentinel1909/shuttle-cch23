@@ -1,10 +1,10 @@
 // src/lib/router.rs
 
-// dependencies
-use crate::routes::root::root;
+// dependenciescrate::routes
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
-use day4_endpoints::get_strength;
+use day4_endpoints::{get_contest_results, get_strength};
 use hyper::{Body, Request, Response, StatusCode};
+use minus1_endpoint::root;
 use std::convert::Infallible;
 use std::future::Future;
 use std::pin::Pin;
@@ -22,8 +22,31 @@ impl Router {
     }
 }
 
-// implement the Tower Service trait for the Router type
+// function to return a general internal server error
+fn internal_server_error() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::INTERNAL_SERVER_ERROR)
+        .body(Body::from("Internal Server Error"))
+        .unwrap()
+}
 
+// function to return a general not found error
+fn not_found() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::NOT_FOUND)
+        .body(Body::from("Not Found"))
+        .unwrap()
+}
+
+// function to return a general bad request error
+fn bad_request() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::BAD_REQUEST)
+        .body(Body::from("Bad Request"))
+        .unwrap()
+}
+
+// implement the Tower Service trait for the Router type
 impl Service<Request<Body>> for Router {
     type Response = Response<Body>;
     type Error = Infallible;
@@ -76,7 +99,7 @@ impl Service<Request<Body>> for Router {
                 _calibrate_url if method == "GET" && values.len() == 3 => {
                     match calibrate_packet_ids(values) {
                         Ok(resp) => resp,
-                        Err(_) => internal_server_error(),
+                        Err(_) => bad_request(),
                     }
                 }
                 _calibrate_url if method == "GET" && values.len() < 21 => {
@@ -89,7 +112,11 @@ impl Service<Request<Body>> for Router {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },
-                _ => bad_request(),
+                "/4/contest" if method == "POST" => match get_contest_results(request).await {
+                    Ok(resp) => resp,
+                    Err(_) => bad_request(),
+                },
+                _ => not_found(),
             };
 
             Ok(response)
@@ -97,20 +124,4 @@ impl Service<Request<Body>> for Router {
 
         Box::pin(fut)
     }
-}
-
-// function to return a general internal server error
-fn internal_server_error() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(Body::from("Internal Server Error"))
-        .unwrap()
-}
-
-// function to return a general bad request error
-fn bad_request() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body(Body::from("Bad Request"))
-        .unwrap()
 }

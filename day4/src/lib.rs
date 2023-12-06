@@ -9,7 +9,6 @@ use crate::domain::reindeers::Reindeer;
 use crate::errors::ReindeerError;
 use hyper::http::Error;
 use hyper::{Body, Request, Response, StatusCode};
-use serde_json;
 
 // function to convert the request body to JSON
 async fn request_to_json(request: Request<Body>) -> Result<Vec<Reindeer>, ReindeerError> {
@@ -40,11 +39,31 @@ pub async fn get_strength(request: Request<Body>) -> Result<Response<Body>, Erro
         reindeer_strength += item.strength;
     }
 
+    // create the response body
+    let response_body = format!("Combined Reindeer Strength: {}", reindeer_strength);
+
     // return the reindeer strength
     Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(format!(
-            "Combined Reindeer Strength: {}",
-            reindeer_strength
-        )))
+        .body(Body::from(response_body))
+}
+
+// function to determine the results of the reindeer contest, based on the JSON data input
+pub async fn get_contest_results(request: Request<Body>) -> Result<Response<Body>, Error> {
+    // get the JSON data from the request body
+    let _reindeer_data = request_to_json(request)
+        .await
+        .map_err(|err| ReindeerError::from(err))?;
+
+    // determine the winning reindeer
+
+    // create the JSON response body
+    let response_body =
+        serde_json::to_string(&_reindeer_data).map_err(|err| ReindeerError::from(err))?;
+
+    // return the winning reindeer
+    Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(Body::from(response_body))
 }

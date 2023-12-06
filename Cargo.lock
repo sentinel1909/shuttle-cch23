@@ -268,6 +268,7 @@ dependencies = [
  "day1",
  "day4",
  "hyper",
+ "minus1",
  "shuttle-runtime",
  "shuttle-tower",
  "tokio",
@@ -934,6 +935,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e7810e0be55b428ada41041c41f32c9f1a42817901b4ccf45fa3d4b6561e74c7"
 dependencies = [
  "adler",
+]
+
+[[package]]
+name = "minus1"
+version = "0.1.0"
+dependencies = [
+ "hyper",
 ]
 
 [[package]]
