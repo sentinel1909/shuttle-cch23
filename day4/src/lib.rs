@@ -61,10 +61,10 @@ pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body
 // function to calculate the outcome of the reindeer comparison contest
 pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>, ApiError> {
     // get the JSON data from the request body
-    let _contest_data = contest_data_from_json(request).await?;
+    let contest_data = contest_data_from_json(request).await?;
 
     // create the response body
-    let response_body = "Endpoint not implemented yet!";
+    let mut response_body = String::from("Contest Results:\n");
 
     // return the contest result
     Ok(Response::builder()

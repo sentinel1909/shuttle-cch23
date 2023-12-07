@@ -1,6 +1,7 @@
 // src/lib.rs
 
 // dependencies
+use hyper::{Body, Response, StatusCode};
 use hyper::http::Error as HyperHttpError;
 use serde_json::Error as SerdeError;
 use std::convert::From;
@@ -44,4 +45,28 @@ impl From<HyperHttpError> for ApiError {
     fn from(err: HyperHttpError) -> ApiError {
         ApiError::HttpError(err)
     }
+}
+
+// function to return a general not found error
+pub fn not_found() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::NOT_FOUND)
+        .body(Body::from("Not Found"))
+        .unwrap()
+}
+
+// function to return a general bad request error
+pub fn bad_request() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::BAD_REQUEST)
+        .body(Body::from("Bad Request"))
+        .unwrap()
+}
+
+// function to return a general internal server error
+pub fn internal_server_error() -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::INTERNAL_SERVER_ERROR)
+        .body(Body::from("Internal Server Error"))
+        .unwrap()
 }

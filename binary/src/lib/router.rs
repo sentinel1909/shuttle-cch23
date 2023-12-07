@@ -4,7 +4,8 @@
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
 use day4_endpoints::{get_contest_result, get_strength_result};
 use day5_endpoints::grinch;
-use hyper::{Body, Request, Response, StatusCode};
+use errors::{bad_request, internal_server_error, not_found};
+use hyper::{Body, Request, Response};
 use minus1_endpoint::root;
 use std::convert::Infallible;
 use std::future::Future;
@@ -21,30 +22,6 @@ impl Router {
     pub fn create() -> Self {
         Self
     }
-}
-
-// function to return a general internal server error
-fn internal_server_error() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(Body::from("Internal Server Error"))
-        .unwrap()
-}
-
-// function to return a general not found error
-fn not_found() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::NOT_FOUND)
-        .body(Body::from("Not Found"))
-        .unwrap()
-}
-
-// function to return a general bad request error
-fn bad_request() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body(Body::from("Bad Request"))
-        .unwrap()
 }
 
 // implement the Tower Service trait for the Router type
@@ -118,7 +95,7 @@ impl Service<Request<Body>> for Router {
                 },
                 "/5/grinch" if method == "GET" => match grinch() {
                     Ok(resp) => resp,
-                    Err(_) => internal_server_error(),
+                    Err(_) => bad_request(),
                 },
                 _ => not_found(),
             };

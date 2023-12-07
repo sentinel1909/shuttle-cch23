@@ -5,13 +5,13 @@
 // dependencies
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Debug, Serialize)]
+#[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct StrengthData {
     pub name: String,
     pub strength: i32,
 }
 
-#[derive(Deserialize, Debug, Serialize)]
+#[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct ContestData {
     pub name: String,
     pub strength: i32,
