@@ -2,7 +2,7 @@
 
 // dependenciescrate::routes
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
-use day4_endpoints::{get_contest_results, get_strength};
+use day4_endpoints::{get_contest_result, get_strength_result};
 use hyper::{Body, Request, Response, StatusCode};
 use minus1_endpoint::root;
 use std::convert::Infallible;
@@ -50,8 +50,7 @@ fn bad_request() -> Response<Body> {
 impl Service<Request<Body>> for Router {
     type Response = Response<Body>;
     type Error = Infallible;
-    type Future =
-        Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync + 'static>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -96,23 +95,23 @@ impl Service<Request<Body>> for Router {
                     Err(_) => internal_server_error(),
                 },
                 "/-1/error" => internal_server_error(),
-                _calibrate_url if method == "GET" && values.len() == 3 => {
+                _calibrate_url if method == "GET" && values.len() == 3 && values[0] == 1 => {
                     match calibrate_packet_ids(values) {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
                 }
-                _calibrate_url if method == "GET" && values.len() < 21 => {
+                _calibrate_url if method == "GET" && values.len() < 21 && values[0] == 1 => {
                     match calibrate_sled_ids(values) {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
                 }
-                "/4/strength" if method == "POST" => match get_strength(request).await {
+                "/4/strength" if method == "POST" => match get_strength_result(request).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },
-                "/4/contest" if method == "POST" => match get_contest_results(request).await {
+                "/4/contest" if method == "POST" => match get_contest_result(request).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },

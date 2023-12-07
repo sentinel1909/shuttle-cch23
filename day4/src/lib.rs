@@ -1,46 +1,61 @@
 // day4/src/lib.rs
 
-// bring the domain module into scope
-mod domain;
-mod errors;
+// 2023 Shuttle Christmas Code Hunt - Day 4 Challenge Endpoints
 
 // dependencies
-use crate::domain::reindeers::Reindeer;
-use crate::errors::ReindeerError;
+use domain::{ContestData, StrengthData};
+use errors::ApiError;
 use hyper::http::Error;
 use hyper::{Body, Request, Response, StatusCode};
 
 // function to convert the request body to JSON
-async fn request_to_json(request: Request<Body>) -> Result<Vec<Reindeer>, ReindeerError> {
+async fn strength_data_from_json(request: Request<Body>) -> Result<Vec<StrengthData>, ApiError> {
     // get the request body
     let body = request.into_body();
 
     // convert the body into bytes
     let body_bytes = hyper::body::to_bytes(body)
         .await
-        .map_err(|err| ReindeerError::from(err))?;
+        .map_err(|err| ApiError::from(err))?;
 
-    // convert the bytes into JSON, return it
-    let reindeer_data: Vec<Reindeer> =
-        serde_json::from_slice(&body_bytes).map_err(|err| ReindeerError::from(err))?;
+    // convert the bytes into a vector of StrengthData, return it
+    let strength_data: Vec<StrengthData> =
+        serde_json::from_slice(&body_bytes).map_err(|err| ApiError::from(err))?;
 
-    Ok(reindeer_data)
+    Ok(strength_data)
+}
+
+// function to convert the request body to JSON
+async fn contest_data_from_json(request: Request<Body>) -> Result<Vec<ContestData>, ApiError> {
+    // get the request body
+    let body = request.into_body();
+
+    // convert the body into bytes
+    let body_bytes = hyper::body::to_bytes(body)
+        .await
+        .map_err(|err| ApiError::from(err))?;
+
+    // convert the bytes into a vector of StrengthData, return it
+    let contest_data: Vec<ContestData> =
+        serde_json::from_slice(&body_bytes).map_err(|err| ApiError::from(err))?;
+
+    Ok(contest_data)
 }
 
 // function to calculate the reindeer strength based on the JSON data input
-pub async fn get_strength(request: Request<Body>) -> Result<Response<Body>, Error> {
+pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body>, Error> {
     // get the JSON data from the request body
-    let reindeer_data = request_to_json(request)
+    let strength_data = strength_data_from_json(request)
         .await
-        .map_err(|err| ReindeerError::from(err))?;
+        .map_err(|err| ApiError::from(err))?;
 
-    let mut reindeer_strength = 0;
-    for item in reindeer_data {
-        reindeer_strength += item.strength;
+    let mut total_strength = 0;
+    for entry in strength_data {
+        total_strength += entry.strength;
     }
 
     // create the response body
-    let response_body = format!("Combined Reindeer Strength: {}", reindeer_strength);
+    let response_body = format!("Combined Reindeer Strength: {}", total_strength);
 
     // return the reindeer strength
     Response::builder()
@@ -48,22 +63,18 @@ pub async fn get_strength(request: Request<Body>) -> Result<Response<Body>, Erro
         .body(Body::from(response_body))
 }
 
-// function to determine the results of the reindeer contest, based on the JSON data input
-pub async fn get_contest_results(request: Request<Body>) -> Result<Response<Body>, Error> {
+// function to calculate the outcome of the reindeer comparison contest
+pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>, Error> {
     // get the JSON data from the request body
-    let _reindeer_data = request_to_json(request)
+    let _contest_data = contest_data_from_json(request)
         .await
-        .map_err(|err| ReindeerError::from(err))?;
+        .map_err(|err| ApiError::from(err))?;
 
-    // determine the winning reindeer
+    // create the response body
+    let response_body = "Endpoint not implemented yet!";
 
-    // create the JSON response body
-    let response_body =
-        serde_json::to_string(&_reindeer_data).map_err(|err| ReindeerError::from(err))?;
-
-    // return the winning reindeer
+    // return the contest result
     Response::builder()
         .status(StatusCode::OK)
-        .header("Content-Type", "application/json")
         .body(Body::from(response_body))
 }

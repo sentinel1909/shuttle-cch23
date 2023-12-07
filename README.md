@@ -38,3 +38,10 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
     - `day 4`
 - mocked up endpoint for Day 4, Task 2
 
+# 2023-12-06
+- attempted to work on Day 4, Task 2
+    - implemented "/4/contest" endpoint
+    - added a new method to the router
+    - stack overflow occurs
+    - other routes work as expected, tests pass
+
