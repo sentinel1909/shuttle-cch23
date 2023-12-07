@@ -11,6 +11,7 @@ use std::fmt::Display;
 pub enum ApiError {
     JsonError(SerdeError),
     HyperError(hyper::Error),
+    HttpError(HyperHttpError),
 }
 
 // implement the Display trait for the ReindeerError type
@@ -19,6 +20,7 @@ impl Display for ApiError {
         match self {
             ApiError::JsonError(err) => write!(f, "JSON error: {}", err),
             ApiError::HyperError(err) => write!(f, "Hyper error: {}", err),
+            ApiError::HttpError(err) => write!(f, "HTTP error: {}", err),
         }
     }
 }
@@ -37,12 +39,9 @@ impl From<hyper::Error> for ApiError {
     }
 }
 
-// implement the From trait for the HyperError type
-impl From<ApiError> for HyperHttpError {
-    fn from(err: ApiError) -> HyperHttpError {
-        match err {
-            ApiError::JsonError(_) => HyperHttpError::from(hyper::http::Error::from(err)),
-            ApiError::HyperError(_) => HyperHttpError::from(hyper::http::Error::from(err)),
-        }
+// implement the From trait for the HyperHttpError type
+impl From<HyperHttpError> for ApiError {
+    fn from(err: HyperHttpError) -> ApiError {
+        ApiError::HttpError(err)
     }
 }

@@ -5,7 +5,6 @@
 // dependencies
 use domain::{ContestData, StrengthData};
 use errors::ApiError;
-use hyper::http::Error;
 use hyper::{Body, Request, Response, StatusCode};
 
 // function to convert the request body to JSON
@@ -15,8 +14,7 @@ async fn strength_data_from_json(request: Request<Body>) -> Result<Vec<StrengthD
 
     // convert the body into bytes
     let body_bytes = hyper::body::to_bytes(body)
-        .await
-        .map_err(|err| ApiError::from(err))?;
+        .await?;
 
     // convert the bytes into a vector of StrengthData, return it
     let strength_data: Vec<StrengthData> =
@@ -32,8 +30,7 @@ async fn contest_data_from_json(request: Request<Body>) -> Result<Vec<ContestDat
 
     // convert the body into bytes
     let body_bytes = hyper::body::to_bytes(body)
-        .await
-        .map_err(|err| ApiError::from(err))?;
+        .await?;
 
     // convert the bytes into a vector of StrengthData, return it
     let contest_data: Vec<ContestData> =
@@ -43,11 +40,9 @@ async fn contest_data_from_json(request: Request<Body>) -> Result<Vec<ContestDat
 }
 
 // function to calculate the reindeer strength based on the JSON data input
-pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body>, Error> {
+pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body>, ApiError> {
     // get the JSON data from the request body
-    let strength_data = strength_data_from_json(request)
-        .await
-        .map_err(|err| ApiError::from(err))?;
+    let strength_data = strength_data_from_json(request).await?;
 
     let mut total_strength = 0;
     for entry in strength_data {
@@ -58,23 +53,21 @@ pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body
     let response_body = format!("Combined Reindeer Strength: {}", total_strength);
 
     // return the reindeer strength
-    Response::builder()
+    Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_body))
+        .body(Body::from(response_body))?)
 }
 
 // function to calculate the outcome of the reindeer comparison contest
-pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>, Error> {
+pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>, ApiError> {
     // get the JSON data from the request body
-    let _contest_data = contest_data_from_json(request)
-        .await
-        .map_err(|err| ApiError::from(err))?;
+    let _contest_data = contest_data_from_json(request).await?;
 
     // create the response body
     let response_body = "Endpoint not implemented yet!";
 
     // return the contest result
-    Response::builder()
+    Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_body))
+        .body(Body::from(response_body))?)
 }
