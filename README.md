@@ -45,3 +45,7 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
     - stack overflow occurs
     - other routes work as expected, tests pass
 
+# 2023-12-07
+- added a Day 5 endpoint, even though there was no challenge (the Grinch stole it)
+- just wanted to practice creating endpoints, etc.
+

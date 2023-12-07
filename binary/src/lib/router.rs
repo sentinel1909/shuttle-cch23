@@ -3,6 +3,7 @@
 // dependenciescrate::routes
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
 use day4_endpoints::{get_contest_result, get_strength_result};
+use day5_endpoints::grinch;
 use hyper::{Body, Request, Response, StatusCode};
 use minus1_endpoint::root;
 use std::convert::Infallible;
@@ -114,6 +115,10 @@ impl Service<Request<Body>> for Router {
                 "/4/contest" if method == "POST" => match get_contest_result(request).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
+                },
+                "/5/grinch" if method == "GET" => match grinch() {
+                    Ok(resp) => resp,
+                    Err(_) => internal_server_error(),
                 },
                 _ => not_found(),
             };

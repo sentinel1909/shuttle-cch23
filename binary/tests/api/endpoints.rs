@@ -135,6 +135,7 @@ mod endpoint_tests {
         let request = Request::builder()
             .uri("/4/contest")
             .method("POST")
+            .header("content-type", "application/json")
             .body(Body::empty())
             .unwrap();
 
@@ -145,6 +146,27 @@ mod endpoint_tests {
         assert_eq!(
             body_bytes,
             String::from("Endpoint not implemented yet!").as_bytes()
+        );
+    }
+
+    // test for the day 5 challenge grinch endpoint
+    #[tokio::test]
+    async fn test_grinch() {
+        let mut mock = spawn_router();
+
+        let request = Request::builder()
+            .uri("/5/grinch")
+            .method("GET")
+            .body(Body::empty())
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(
+            body_bytes,
+            String::from("You're a mean one, Mr. Grinch!").as_bytes()
         );
     }
 }

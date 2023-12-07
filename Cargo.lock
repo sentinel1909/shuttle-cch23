@@ -267,6 +267,7 @@ version = "0.1.0"
 dependencies = [
  "day1",
  "day4",
+ "day5",
  "errors",
  "hyper",
  "minus1",
@@ -420,6 +421,15 @@ dependencies = [
  "hyper",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "day5"
+version = "0.1.0"
+dependencies = [
+ "domain",
+ "errors",
+ "hyper",
 ]
 
 [[package]]
