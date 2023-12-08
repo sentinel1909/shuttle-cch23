@@ -4,6 +4,7 @@
 use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
 use day4_endpoints::{get_contest_result, get_strength_result};
 use day5_endpoints::grinch;
+use day6_endpoints::count_elf;
 use errors::{bad_request, internal_server_error, not_found};
 use hyper::{Body, Request, Response};
 use minus1_endpoint::root;
@@ -85,15 +86,19 @@ impl Service<Request<Body>> for Router {
                         Err(_) => bad_request(),
                     }
                 }
-                "/4/strength" if method == "POST" => match get_strength_result(request).await {
+                "/4/strength" if method == "POST" && request.headers().contains_key("content-type") => match get_strength_result(request).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },
-                "/4/contest" if method == "POST" => match get_contest_result(request).await {
+                "/4/contest" if method == "POST" && request.headers().contains_key("content-type") => match get_contest_result(request).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },
                 "/5/grinch" if method == "GET" => match grinch() {
+                    Ok(resp) => resp,
+                    Err(_) => bad_request(),
+                },
+                "/6" if method == "POST" && request.headers().contains_key("content-type") => match count_elf() {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },

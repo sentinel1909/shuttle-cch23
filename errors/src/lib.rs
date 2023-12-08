@@ -1,8 +1,8 @@
 // src/lib.rs
 
 // dependencies
-use hyper::{Body, Response, StatusCode};
 use hyper::http::Error as HyperHttpError;
+use hyper::{Body, Response, StatusCode};
 use serde_json::Error as SerdeError;
 use std::convert::From;
 use std::fmt::Display;

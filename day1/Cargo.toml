@@ -10,4 +10,5 @@ name = "day1_endpoints"
 path = "src/lib.rs"
 
 [dependencies]
+errors = { path = "../errors" }
 hyper = { version = "0.14.27", features = ["full"] }
