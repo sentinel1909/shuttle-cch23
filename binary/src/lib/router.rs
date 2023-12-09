@@ -86,22 +86,32 @@ impl Service<Request<Body>> for Router {
                         Err(_) => bad_request(),
                     }
                 }
-                "/4/strength" if method == "POST" && request.headers().contains_key("content-type") => match get_strength_result(request).await {
-                    Ok(resp) => resp,
-                    Err(_) => bad_request(),
-                },
-                "/4/contest" if method == "POST" && request.headers().contains_key("content-type") => match get_contest_result(request).await {
-                    Ok(resp) => resp,
-                    Err(_) => bad_request(),
-                },
+                "/4/strength"
+                    if method == "POST" && request.headers().contains_key("content-type") =>
+                {
+                    match get_strength_result(request).await {
+                        Ok(resp) => resp,
+                        Err(_) => bad_request(),
+                    }
+                }
+                "/4/contest"
+                    if method == "POST" && request.headers().contains_key("content-type") =>
+                {
+                    match get_contest_result(request).await {
+                        Ok(resp) => resp,
+                        Err(_) => bad_request(),
+                    }
+                }
                 "/5/grinch" if method == "GET" => match grinch() {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },
-                "/6" if method == "POST" && request.headers().contains_key("content-type") => match count_elf() {
-                    Ok(resp) => resp,
-                    Err(_) => bad_request(),
-                },
+                "/6" if method == "POST" && request.headers().contains_key("content-type") => {
+                    match count_elf(request).await {
+                        Ok(resp) => resp,
+                        Err(_) => bad_request(),
+                    }
+                }
                 _ => not_found(),
             };
 

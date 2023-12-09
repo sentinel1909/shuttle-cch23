@@ -196,4 +196,25 @@ mod endpoint_tests {
             String::from("You're a mean one, Mr. Grinch!").as_bytes()
         );
     }
+
+    // test for the day 6 challenge count_elf endpoint
+    #[tokio::test]
+    async fn test_count_elf() {
+        let mut mock = spawn_router();
+
+        let request = Request::builder()
+            .uri("/6")
+            .method("POST")
+            .header("content-type", "text/plain")
+            .body(Body::from(
+                "The mischievous elf peeked out from behind the toy workshop, and another elf joined in the festive dance. Look, there is also an elf on that shelf!",
+            ))
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(body_bytes, String::from("Elf: 4").as_bytes());
+    }
 }

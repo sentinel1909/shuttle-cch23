@@ -2,10 +2,11 @@
 
 // dependencies
 use hyper::http::Error as HyperHttpError;
-use hyper::{Body, Response, StatusCode};
+use hyper::{Body, Error, Response, StatusCode};
 use serde_json::Error as SerdeError;
 use std::convert::From;
 use std::fmt::Display;
+use std::string::FromUtf8Error;
 
 // define an enum to represent the possible errors
 #[derive(Debug)]
@@ -13,6 +14,7 @@ pub enum ApiError {
     JsonError(SerdeError),
     HyperError(hyper::Error),
     HttpError(HyperHttpError),
+    ConversionError(FromUtf8Error),
 }
 
 // implement the Display trait for the ReindeerError type
@@ -22,6 +24,7 @@ impl Display for ApiError {
             ApiError::JsonError(err) => write!(f, "JSON error: {}", err),
             ApiError::HyperError(err) => write!(f, "Hyper error: {}", err),
             ApiError::HttpError(err) => write!(f, "HTTP error: {}", err),
+            ApiError::ConversionError(err) => write!(f, "Conversion error: {}", err),
         }
     }
 }
@@ -34,8 +37,8 @@ impl From<SerdeError> for ApiError {
 }
 
 // implement the From trait for the HyperError type
-impl From<hyper::Error> for ApiError {
-    fn from(err: hyper::Error) -> ApiError {
+impl From<Error> for ApiError {
+    fn from(err: Error) -> ApiError {
         ApiError::HyperError(err)
     }
 }
@@ -44,6 +47,13 @@ impl From<hyper::Error> for ApiError {
 impl From<HyperHttpError> for ApiError {
     fn from(err: HyperHttpError) -> ApiError {
         ApiError::HttpError(err)
+    }
+}
+
+// implement the From trait for the FromUtf8Error type
+impl From<FromUtf8Error> for ApiError {
+    fn from(err: FromUtf8Error) -> ApiError {
+        ApiError::ConversionError(err)
     }
 }
 

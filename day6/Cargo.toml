@@ -10,4 +10,6 @@ path = "src/lib.rs"
 
 [dependencies]
 errors = { path = "../errors" }
+utilities = { path = "../utilities" }
 hyper = { version = "0.14.27", features = ["full"] }
+serde_json = "1.0.108"
