@@ -215,6 +215,6 @@ mod endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("Elf: 4").as_bytes());
+        assert_eq!(body_bytes, String::from("elf:4").as_bytes());
     }
 }

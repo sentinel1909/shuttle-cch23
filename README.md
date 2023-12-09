@@ -49,3 +49,11 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
 - added a Day 5 endpoint, even though there was no challenge (the Grinch stole it)
 - just wanted to practice creating endpoints, etc.
 
+# 2023-12-08
+- solved Day 6, Task 1 (I think)
+- banged my head against the Nom crate quite a bit
+
+# 2023-12-09
+- mocked up the Day 7 challenge endpoint
+- added tower-cookies as a dependency
+

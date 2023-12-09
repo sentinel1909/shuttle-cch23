@@ -5,7 +5,6 @@
 // dependencies
 use errors::ApiError;
 use hyper::{Body, Request, Response, StatusCode};
-use serde_json;
 use utilities::parser::parse_input;
 
 pub async fn count_elf(request: Request<Body>) -> Result<Response<Body>, ApiError> {
@@ -25,13 +24,10 @@ pub async fn count_elf(request: Request<Body>) -> Result<Response<Body>, ApiErro
     let elf_count = result.1.len();
 
     // build the response body message
-    let response_msg = format!("elf: {}", elf_count);
-
-    // build the response body
-    let response_body = serde_json::to_string(&response_msg)?;
+    let response_msg = format!("elf:{}", elf_count);
 
     // return the reindeer strength
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_body))?)
+        .body(Body::from(response_msg))?)
 }
