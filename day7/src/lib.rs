@@ -3,17 +3,28 @@
 // 2023 Shuttle Christmas Code Hunt - Day 7 Challenge Endpoints
 
 // dependencies
+use base64::engine::general_purpose;
+use base64::Engine;
 use errors::ApiError;
 use hyper::{Body, Request, Response, StatusCode};
-use tower_cookies::{Cookie, Cookies};
 
-pub async fn decode(request: Request<Body>) -> Result<Response<Body>, ApiError> {
-    
-    // set the cookie
-    cookies.add(Cookie::new("recipe", "eyJmbG91ciI6MTAwLCJjaG9jb2xhdGUgY2hpcHMiOjIwfQ=="));
-    
+pub async fn decode_the_receipe(request: Request<Body>) -> Result<Response<Body>, ApiError> {
+    // get the cookie from the request
+    let cookie = request.headers().get("cookie").unwrap().to_str().unwrap();
+
+    // get the cookie value
+    let cookie_value = cookie.split('=').collect::<Vec<&str>>()[1];
+
+    // decode the cookie value
+    let decoded_cookie = general_purpose::STANDARD_NO_PAD
+        .decode(cookie_value)
+        .unwrap();
+
+    // convert the decoded cookie to a string
+    let decoded_recipe = String::from_utf8(decoded_cookie).unwrap();
+
     // build the response body
-    let response_body = format!("Cookie: {}", cookies.get("recipe").unwrap().value());
+    let response_body = format!("{}", decoded_recipe);
 
     // return the response
     Ok(Response::builder()

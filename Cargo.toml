@@ -1,6 +1,6 @@
 [workspace]
     members = [
-        "binary",
+        "server",
         "domain",
         "errors",
         "minus1",

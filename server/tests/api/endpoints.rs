@@ -207,7 +207,7 @@ mod endpoint_tests {
             .method("POST")
             .header("content-type", "text/plain")
             .body(Body::from(
-                "The mischievous elf peeked out from behind the toy workshop, and another elf joined in the festive dance. Look, there is also an elf on that shelf!",
+                "The mischievous elf peeked out from behind the toy workshop, and another elf joined in the festive dance. Look, there is also an elf on that shelf! There is another elf hiding in the shadows nearby. The elves are everywhere!",
             ))
             .unwrap();
 
@@ -215,6 +215,28 @@ mod endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("elf:4").as_bytes());
+        assert_eq!(body_bytes, String::from("elf:5").as_bytes());
+    }
+
+    // test for the day 7 challenge decode_the_receipe endpoint
+    #[tokio::test]
+    async fn test_decode_the_receipe() {
+        let mut mock = spawn_router();
+
+        let request = Request::builder()
+            .uri("/7/decode")
+            .method("GET")
+            .header("cookie", "recipe=eyJmbG91ciI6MTAwLCJjaG9jb2xhdGUgY2hpcHMiOjIwfQ==")
+            .body(Body::empty())
+            .unwrap();
+
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(
+            body_bytes,
+            String::from("\"{\"flour\":100, \"chocolate chips\":20}\"").as_bytes()
+        );
     }
 }

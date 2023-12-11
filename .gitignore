@@ -1,10 +1,13 @@
 # Shuttle-CCH23 git ignore file
 # This file is used to ignore files that should not be committed to git
 /target
-/binary/target
+/server/target
 /errors/target
 /day1/target
 /day4/target
+/day5/target
+/day6/target
+/day7/target
 /minus1/target
 .shuttle-storage
 Secrets*.toml
