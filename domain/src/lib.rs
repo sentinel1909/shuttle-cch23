@@ -26,15 +26,7 @@ pub struct ContestData {
     pub candies_eaten_yesterday: i32,
 }
 
-// struct to represent the contest winners, per the day 4, part 2 challenge
-#[derive(Clone, Deserialize, Debug, PartialEq, Eq, Serialize)]
-pub struct ContestWinners {
-    pub fastest: String,
-    pub tallest: String,
-    pub magician: String,
-    pub consumer: String,
-}
-
+// struct to represent the kitchen data, per the day 7, part 1 challenge
 #[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct Kitchen {
     pub recipe: Recipe,

@@ -32,15 +32,39 @@ mod day_4_challenge_endpoint_tests {
                 [
                     {
                         "name": "Dasher",
-                        "strength": 6
+                        "strength": 5
                     },
                     {
                         "name": "Dancer",
-                        "strength": 8
+                        "strength": 10
                     },
                     {
                         "name": "Prancer",
-                        "strength": 14
+                        "strength": 15
+                    },
+                    {
+                        "name": "Vixen",
+                        "strength": 20
+                    },
+                    {
+                        "name": "Comet",
+                        "strength": 25
+                    },
+                    {
+                        "name": "Cupid",
+                        "strength": 30
+                    },
+                    {
+                        "name": "Donner",
+                        "strength": 35
+                    },
+                    {
+                        "name": "Blitzen",
+                        "strength": 40
+                    },
+                    {
+                        "name": "Rudolph",
+                        "strength": 45
                     }
                 ]
                 "#,
@@ -53,7 +77,7 @@ mod day_4_challenge_endpoint_tests {
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
         assert_eq!(
             body_bytes,
-            String::from("Combined Reindeer Strength: 28").as_bytes()
+            String::from("225").as_bytes()
         );
     }
 

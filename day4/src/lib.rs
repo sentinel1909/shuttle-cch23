@@ -3,7 +3,7 @@
 // 2023 Shuttle Christmas Code Hunt - Day 4 Challenge Endpoints
 
 // dependencies
-use domain::{ContestData, ContestWinners, StrengthData};
+use domain::{ContestData, StrengthData};
 use errors::ApiError;
 use hyper::{Body, Request, Response, StatusCode};
 
@@ -46,12 +46,12 @@ pub async fn get_strength_result(request: Request<Body>) -> Result<Response<Body
     }
 
     // create the response body
-    let response_body = format!("Combined Reindeer Strength: {}", total_strength);
+    let response_msg = total_strength.to_string();
 
     // return the reindeer strength
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_body))?)
+        .body(Body::from(response_msg))?)
 }
 
 // function to calculate the outcome of the reindeer comparison contest
@@ -59,37 +59,13 @@ pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>
     // get the JSON data from the request body
     let contest_data = contest_data_from_json(request).await?;
 
-    // find the winning reaindeer in each category
-    let winners = ContestWinners {
-        fastest: contest_data
-            .iter()
-            .max_by(|a, b| a.speed.total_cmp(&b.speed))
-            .unwrap()
-            .name
-            .clone(),
-        tallest: contest_data
-            .iter()
-            .max_by_key(|a| a.height)
-            .unwrap()
-            .name
-            .clone(),
-        magician: contest_data
-            .iter()
-            .max_by_key(|a| a.snow_magic_power)
-            .unwrap()
-            .name
-            .clone(),
-        consumer: contest_data
-            .iter()
-            .max_by_key(|a| a.candies_eaten_yesterday)
-            .unwrap()
-            .name
-            .clone(),
-    };
+    let fastest = contest_data.iter().max_by(|a, b| a.speed.total_cmp(&b.speed)).unwrap();
+    let tallest = contest_data.iter().max_by_key(|a| a.height).unwrap();
+    let magician = contest_data.iter().max_by_key(|a| a.snow_magic_power).unwrap();
+    let consumer = contest_data.iter().max_by_key(|a| a.candies_eaten_yesterday).unwrap();
 
     let msg = format!(
-        "fastest: Speeding past the finish line with a strength of 5 is {} tallest: {} is standing tall with his 36 cm wide antlers magician: {} could blast you away with a snow magic power of 9001 consumer: {} ate lots of candies, but also some grass",
-        winners.fastest, winners.tallest, winners.magician, winners.consumer
+        "fastest: Speeding past the finish line with a strength of {:?} is {:?} tallest: {:?} is standing tall with his {:?} cm wide antlers magician: {:?} could blast you away with a snow magic power of {:?} consumer: {:?} ate lots of candies, but also some {:?}", fastest.strength, fastest.name, tallest.name, tallest.antler_width, magician.name, magician.snow_magic_power, consumer.name, consumer.favorite_food
     );
 
     let response_body = serde_json::to_string(&msg)?;
