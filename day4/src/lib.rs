@@ -16,8 +16,7 @@ async fn strength_data_from_json(request: Request<Body>) -> Result<Vec<StrengthD
     let body_bytes = hyper::body::to_bytes(body).await?;
 
     // convert the bytes into a vector of StrengthData, return it
-    let strength_data: Vec<StrengthData> =
-        serde_json::from_slice(&body_bytes).map_err(|err| ApiError::from(err))?;
+    let strength_data: Vec<StrengthData> = serde_json::from_slice(&body_bytes)?;
 
     Ok(strength_data)
 }
@@ -31,8 +30,7 @@ async fn contest_data_from_json(request: Request<Body>) -> Result<Vec<ContestDat
     let body_bytes = hyper::body::to_bytes(body).await?;
 
     // convert the bytes into a vector of StrengthData, return it
-    let contest_data: Vec<ContestData> =
-        serde_json::from_slice(&body_bytes).map_err(|err| ApiError::from(err))?;
+    let contest_data: Vec<ContestData> = serde_json::from_slice(&body_bytes)?;
 
     Ok(contest_data)
 }
@@ -89,12 +87,12 @@ pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>
             .clone(),
     };
 
-    let body_msg = format!(
+    let msg = format!(
         "fastest: Speeding past the finish line with a strength of 5 is {} tallest: {} is standing tall with his 36 cm wide antlers magician: {} could blast you away with a snow magic power of 9001 consumer: {} ate lots of candies, but also some grass",
         winners.fastest, winners.tallest, winners.magician, winners.consumer
     );
 
-    let response_body = serde_json::to_string(&body_msg)?;
+    let response_body = serde_json::to_string(&msg)?;
 
     // return the contest result
     Ok(Response::builder()

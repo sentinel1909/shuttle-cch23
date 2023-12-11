@@ -5,12 +5,14 @@
 // dependencies
 use serde::{Deserialize, Serialize};
 
+// struct to represent the sled data, per the day 4, part 1 challenge
 #[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct StrengthData {
     pub name: String,
     pub strength: i32,
 }
 
+// struct to represent the contest data, per the day 4, part 1 challenge
 #[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct ContestData {
     pub name: String,
@@ -24,10 +26,39 @@ pub struct ContestData {
     pub candies_eaten_yesterday: i32,
 }
 
+// struct to represent the contest winners, per the day 4, part 2 challenge
 #[derive(Clone, Deserialize, Debug, PartialEq, Eq, Serialize)]
 pub struct ContestWinners {
     pub fastest: String,
     pub tallest: String,
     pub magician: String,
     pub consumer: String,
+}
+
+#[derive(Clone, Deserialize, Debug, Serialize)]
+pub struct Kitchen {
+    pub recipe: Recipe,
+    pub pantry: Pantry,
+}
+
+#[derive(Clone, Deserialize, Debug, Serialize)]
+pub struct Recipe {
+    pub flour: i32,
+    pub sugar: i32,
+    pub butter: i32,
+    #[serde(rename = "baking powder")]
+    pub baking_powder: i32,
+    #[serde(rename = "chocolate chips")]
+    pub chocolate_chips: i32,
+}
+
+#[derive(Clone, Deserialize, Debug, Serialize)]
+pub struct Pantry {
+    pub flour: i32,
+    pub sugar: i32,
+    pub butter: i32,
+    #[serde(rename = "baking powder")]
+    pub baking_powder: i32,
+    #[serde(rename = "chocolate chips")]
+    pub chocolate_chips: i32,
 }

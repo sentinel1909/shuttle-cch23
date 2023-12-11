@@ -10,7 +10,7 @@ use hyper::{Response, StatusCode};
 // function to return the calibrated packet ID
 pub fn calibrate_packet_ids(packets: Vec<i32>) -> Result<Response<Body>, ApiError> {
     // recalibrated the packet ID
-    let bitwise_or = (packets[1] ^ packets[2]) as i32;
+    let bitwise_or = packets[1] ^ packets[2];
     let calibrated_packet_id = bitwise_or.pow(3);
 
     // return the recalibrated packet ID

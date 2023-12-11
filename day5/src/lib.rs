@@ -8,10 +8,10 @@ use hyper::{Body, Response, StatusCode};
 
 pub fn grinch() -> Result<Response<Body>, ApiError> {
     // create the response body
-    let response_body = "You're a mean one, Mr. Grinch!";
+    let msg = "You're a mean one, Mr. Grinch!";
 
     // return the reindeer strength
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_body))?)
+        .body(Body::from(msg))?)
 }

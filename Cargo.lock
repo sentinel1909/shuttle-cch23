@@ -442,6 +442,7 @@ version = "0.1.0"
 dependencies = [
  "errors",
  "hyper",
+ "serde_json",
  "utilities",
 ]
 
@@ -450,8 +451,10 @@ name = "day7"
 version = "0.1.0"
 dependencies = [
  "base64",
+ "domain",
  "errors",
  "hyper",
+ "serde_json",
 ]
 
 [[package]]

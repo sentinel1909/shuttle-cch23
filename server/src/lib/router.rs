@@ -5,7 +5,7 @@ use day1_endpoints::{calibrate_packet_ids, calibrate_sled_ids};
 use day4_endpoints::{get_contest_result, get_strength_result};
 use day5_endpoints::grinch;
 use day6_endpoints::count_elf;
-use day7_endpoints::decode_the_receipe;
+use day7_endpoints::{bake, decode_the_receipe};
 use errors::{bad_request, internal_server_error, not_found};
 use hyper::{Body, Request, Response};
 use minus1_endpoint::root;
@@ -80,13 +80,13 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
                 _calibrate_url if method == "GET" && values.len() < 21 && values[0] == 1 => {
                     match calibrate_sled_ids(values) {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
                 "/4/strength"
                     if method == "POST" && request.headers().contains_key("content-type") =>
                 {
@@ -94,7 +94,7 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
                 "/4/contest"
                     if method == "POST" && request.headers().contains_key("content-type") =>
                 {
@@ -102,7 +102,7 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
                 "/5/grinch" if method == "GET" => match grinch() {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
@@ -112,13 +112,19 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
                 "/7/decode" if method == "GET" && request.headers().contains_key("cookie") => {
                     match decode_the_receipe(request).await {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
+                "/7/bake" if method == "GET" && request.headers().contains_key("cookie") => {
+                    match bake(request).await {
+                        Ok(resp) => resp,
+                        Err(_) => bad_request(),
+                    }
+                },
                 _ => not_found(),
             };
 

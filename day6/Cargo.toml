@@ -12,3 +12,4 @@ path = "src/lib.rs"
 errors = { path = "../errors" }
 utilities = { path = "../utilities" }
 hyper = { version = "0.14.27", features = ["full"] }
+serde_json = "1.0.108"

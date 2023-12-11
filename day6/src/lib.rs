@@ -23,11 +23,12 @@ pub async fn count_elf(request: Request<Body>) -> Result<Response<Body>, ApiErro
     // the length of the second element in the tuple is the number of times the word elf appears
     let elf_count = result.1.len();
 
-    // build the response body message
-    let response_msg = format!("elf:{}", elf_count);
+    // build the response body
+    let msg = format!("elf:{}", elf_count);
+    let response_body = serde_json::to_string(&msg).unwrap();
 
     // return the reindeer strength
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::from(response_msg))?)
+        .body(Body::from(response_body))?)
 }
