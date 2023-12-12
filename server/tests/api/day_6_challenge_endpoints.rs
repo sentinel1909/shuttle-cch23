@@ -10,6 +10,7 @@ mod day_6_challenge_endpoint_tests {
     use hyper::body;
     use hyper::body::Body;
     use hyper::Request;
+    use serde_json::json;
     use tower_test::mock::spawn::Spawn;
 
     // spawn a router for testing
@@ -36,6 +37,10 @@ mod day_6_challenge_endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("\"elf:5\"").as_bytes());
+        let obj = json!({
+            "elf": 5
+        })
+        .to_string();
+        assert_eq!(body_bytes, obj.as_bytes());
     }
 }

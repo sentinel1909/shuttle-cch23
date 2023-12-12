@@ -33,6 +33,9 @@ mod day_5_challenge_endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(body_bytes, String::from("You're a mean one, Mr. Grinch!").as_bytes());
+        assert_eq!(
+            body_bytes,
+            String::from("You're a mean one, Mr. Grinch!").as_bytes()
+        );
     }
 }

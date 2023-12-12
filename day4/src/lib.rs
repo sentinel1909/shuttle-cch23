@@ -6,6 +6,7 @@
 use domain::{ContestData, StrengthData};
 use errors::ApiError;
 use hyper::{Body, Request, Response, StatusCode};
+use serde_json::json;
 
 // function to convert the request body to JSON
 async fn strength_data_from_json(request: Request<Body>) -> Result<Vec<StrengthData>, ApiError> {
@@ -59,16 +60,30 @@ pub async fn get_contest_result(request: Request<Body>) -> Result<Response<Body>
     // get the JSON data from the request body
     let contest_data = contest_data_from_json(request).await?;
 
-    let fastest = contest_data.iter().max_by(|a, b| a.speed.total_cmp(&b.speed)).unwrap();
+    let fastest = contest_data
+        .iter()
+        .max_by(|a, b| a.speed.total_cmp(&b.speed))
+        .unwrap();
     let tallest = contest_data.iter().max_by_key(|a| a.height).unwrap();
-    let magician = contest_data.iter().max_by_key(|a| a.snow_magic_power).unwrap();
-    let consumer = contest_data.iter().max_by_key(|a| a.candies_eaten_yesterday).unwrap();
+    let magician = contest_data
+        .iter()
+        .max_by_key(|a| a.snow_magic_power)
+        .unwrap();
+    let consumer = contest_data
+        .iter()
+        .max_by_key(|a| a.candies_eaten_yesterday)
+        .unwrap();
 
-    let msg = format!(
-        "fastest: Speeding past the finish line with a strength of {:?} is {:?} tallest: {:?} is standing tall with his {:?} cm wide antlers magician: {:?} could blast you away with a snow magic power of {:?} consumer: {:?} ate lots of candies, but also some {:?}", fastest.strength, fastest.name, tallest.name, tallest.antler_width, magician.name, magician.snow_magic_power, consumer.name, consumer.favorite_food
-    );
+    // create the JSON message for the response body
+    let obj = json!({
+        "fastest": format!("Speeding past the finish line with a strength of {} is {}", fastest.strength, fastest.name),
+        "tallest": format!("{} is standing tall with his {} cm wide antlers", tallest.name, tallest.antler_width),
+        "magician": format!("{} could blast you away with a snow magic power of {}", magician.name, magician.snow_magic_power),
+        "consumer": format!("{} ate lots of candies, but also some {}", consumer.name, consumer.favorite_food)
+    });
 
-    let response_body = serde_json::to_string(&msg)?;
+    // build the response body
+    let response_body = serde_json::to_string(&obj)?;
 
     // return the contest result
     Ok(Response::builder()

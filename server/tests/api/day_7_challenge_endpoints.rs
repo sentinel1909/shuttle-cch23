@@ -6,7 +6,7 @@
 
 mod day_7_challenge_endpoint_tests {
 
-  // dependencies
+    // dependencies
     use cch23_sentinel1909::router::Router;
     use hyper::body;
     use hyper::body::Body;
@@ -19,7 +19,7 @@ mod day_7_challenge_endpoint_tests {
         Spawn::new(router)
     }
 
-  #[tokio::test]
+    #[tokio::test]
     async fn test_decode_the_receipe() {
         let mut mock = spawn_router();
 
@@ -43,11 +43,11 @@ mod day_7_challenge_endpoint_tests {
         );
     }
 
-  #[tokio::test]
-  async fn test_bake() {
-      let mut mock = spawn_router();
+    #[tokio::test]
+    async fn test_bake() {
+        let mut mock = spawn_router();
 
-      let request = Request::builder()
+        let request = Request::builder()
           .uri("/7/bake")
           .method("GET")
           .header(
@@ -57,15 +57,14 @@ mod day_7_challenge_endpoint_tests {
           .body(Body::empty())
           .unwrap();
 
-      let response = mock.call(request);
-      let response = response.await.unwrap();
-      assert_eq!(response.status(), 200);
-      let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-      assert_eq!(
+        let response = mock.call(request);
+        let response = response.await.unwrap();
+        assert_eq!(response.status(), 200);
+        let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        assert_eq!(
           body_bytes,
           String::from(
             "{\"recipe\":{\"flour\":95,\"sugar\":50,\"butter\":30,\"baking powder\":10,\"chocolate chips\":50},\"pantry\":{\"flour\":385,\"sugar\":507,\"butter\":2122,\"baking powder\":865,\"chocolate chips\":457}}"
           ).as_bytes());
-  }
+    }
 }
-

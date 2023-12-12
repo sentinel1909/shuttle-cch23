@@ -5,11 +5,12 @@
 // tests for the day 4 challenge grinch endpoints
 mod day_4_challenge_endpoint_tests {
 
-  // dependencies
+    // dependencies
     use cch23_sentinel1909::router::Router;
     use hyper::body;
     use hyper::body::Body;
     use hyper::Request;
+    use serde_json::json;
     use tower_test::mock::spawn::Spawn;
 
     // spawn a router for testing
@@ -75,10 +76,7 @@ mod day_4_challenge_endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(
-            body_bytes,
-            String::from("225").as_bytes()
-        );
+        assert_eq!(body_bytes, String::from("225").as_bytes());
     }
 
     // test for the day 4 challenge get_strength_result endpoint
@@ -122,11 +120,15 @@ mod day_4_challenge_endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+        let obj = json!({
+        "fastest": "Speeding past the finish line with a strength of 5 is Dasher",
+        "tallest": "Dasher is standing tall with his 36 cm wide antlers",
+        "magician": "Dasher could blast you away with a snow magic power of 9001",
+        "consumer": "Dancer ate lots of candies, but also some grass"
+    }).to_string();
         assert_eq!(
             body_bytes,
-            String::from(
-                "\"fastest: Speeding past the finish line with a strength of 5 is Dasher tallest: Dasher is standing tall with his 36 cm wide antlers magician: Dasher could blast you away with a snow magic power of 9001 consumer: Dancer ate lots of candies, but also some grass\""
-            )
+            obj
             .as_bytes()
         );
     }

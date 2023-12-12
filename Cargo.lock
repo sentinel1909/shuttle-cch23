@@ -273,6 +273,7 @@ dependencies = [
  "errors",
  "hyper",
  "minus1",
+ "serde_json",
  "shuttle-runtime",
  "shuttle-tower",
  "tokio",

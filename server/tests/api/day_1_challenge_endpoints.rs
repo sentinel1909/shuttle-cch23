@@ -5,7 +5,7 @@
 // tests for the day 4 challenge grinch endpoints
 mod day_1_challenge_endpoint_tests {
 
-  // dependencies
+    // dependencies
     use cch23_sentinel1909::router::Router;
     use hyper::body;
     use hyper::body::Body;
@@ -54,5 +54,3 @@ mod day_1_challenge_endpoint_tests {
         assert_eq!(body_bytes, String::from("1728").as_bytes());
     }
 }
-
-
