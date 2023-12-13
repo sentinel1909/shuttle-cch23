@@ -30,9 +30,9 @@ pub async fn count_elf(request: Request<Body>) -> Result<Response<Body>, ApiErro
 
     // build the response body
     let obj = json!({
-        "elf": elf_count,
-        "elf on a shelf": elf_on_a_shelf_count,
-        "shelf with no elf on it": shelf_with_no_elf_count,
+        "elf":elf_count,
+        "elf on a shelf":elf_on_a_shelf_count,
+        "shelf with no elf on it":shelf_with_no_elf_count,
     });
     let response_body = serde_json::to_string(&obj)?;
     // return the reindeer strength
