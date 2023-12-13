@@ -1,6 +1,6 @@
 [package]
 name = "cch23-sentinel1909"
-version = "0.1.0"
+version = "7.1.0"
 edition = "2021"
 
 [[bin]]

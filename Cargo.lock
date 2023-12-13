@@ -263,7 +263,7 @@ dependencies = [
 
 [[package]]
 name = "cch23-sentinel1909"
-version = "0.1.0"
+version = "7.1.0"
 dependencies = [
  "day1",
  "day4",
@@ -411,7 +411,7 @@ dependencies = [
 
 [[package]]
 name = "day1"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "errors",
  "hyper",
@@ -419,7 +419,7 @@ dependencies = [
 
 [[package]]
 name = "day4"
-version = "0.1.0"
+version = "4.2.0"
 dependencies = [
  "domain",
  "errors",
@@ -430,7 +430,7 @@ dependencies = [
 
 [[package]]
 name = "day5"
-version = "0.1.0"
+version = "5.0.0"
 dependencies = [
  "domain",
  "errors",
@@ -439,7 +439,7 @@ dependencies = [
 
 [[package]]
 name = "day6"
-version = "0.1.0"
+version = "6.2.0"
 dependencies = [
  "errors",
  "hyper",
@@ -449,7 +449,7 @@ dependencies = [
 
 [[package]]
 name = "day7"
-version = "0.1.0"
+version = "7.1.0"
 dependencies = [
  "base64",
  "domain",
