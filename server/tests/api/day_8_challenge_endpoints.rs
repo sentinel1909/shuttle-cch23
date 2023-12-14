@@ -22,7 +22,6 @@ mod day_8_challenge_endpoint_tests {
     // test the get_weight endpoint
     #[tokio::test]
     async fn test_get_weight() {
-
         // spawn a router for testing
         let mut mock = spawn_router();
 
@@ -38,7 +37,5 @@ mod day_8_challenge_endpoint_tests {
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
         assert_eq!(body_bytes, "6".as_bytes())
-
     }
-
-  }
+}

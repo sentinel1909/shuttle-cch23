@@ -125,8 +125,8 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                },
-                "/8/weight/25" if method == "GET" => match get_weight(25).await {
+                }
+                _dyn_path if method == "GET" && values.len() == 2 && values[0] == 8 => match get_weight(values[1]).await {
                     Ok(resp) => resp,
                     Err(_) => bad_request(),
                 },

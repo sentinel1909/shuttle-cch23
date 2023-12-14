@@ -20,8 +20,10 @@ pub async fn count_elf(request: Request<Body>) -> Result<Response<Body>, ApiErro
 
     // parse the input string, the result contains all the instances of the word elf
     let num_elves = parse_elf(&input_string).expect("Failed to parse input string");
-    let num_elves_on_shelves = parse_elf_on_a_shelf(&input_string).expect("Failed to parse input string");
-    let num_shelves_with_no_elves = parse_shelves_with_no_elves(input_string.as_str()).expect("Failed to parse input string");
+    let num_elves_on_shelves =
+        parse_elf_on_a_shelf(&input_string).expect("Failed to parse input string");
+    let num_shelves_with_no_elves =
+        parse_shelves_with_no_elves(input_string.as_str()).expect("Failed to parse input string");
 
     // the length of the second element in the tuple is the number of times the word elf appears
     let elf_count = num_elves.1.len();
