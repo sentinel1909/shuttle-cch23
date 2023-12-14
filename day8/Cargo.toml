@@ -1,0 +1,17 @@
+[package]
+name = "day8"
+version = "8.1.0"
+edition = "2021"
+
+[lib]
+name = "day8_endpoints"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+domain = { path = "../domain" }
+errors = { path = "../errors" }
+hyper = { version = "0.14.27", features = ["full"] }
+reqwest = { version = "0.11.22", features = [ "json" ] }
+serde_json = "1.0.108"

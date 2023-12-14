@@ -54,3 +54,9 @@ pub struct Pantry {
     #[serde(rename = "chocolate chips")]
     pub chocolate_chips: i32,
 }
+
+// struct to represent the weight of a Pokemon, per the day 8, part 1 challenge
+#[derive(Clone, Deserialize, Debug, Serialize)]
+pub struct PokemonWeight {
+    pub weight: f32,
+}

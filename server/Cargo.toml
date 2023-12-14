@@ -1,6 +1,6 @@
 [package]
 name = "cch23-sentinel1909"
-version = "7.1.0"
+version = "8.1.0"
 edition = "2021"
 
 [[bin]]
@@ -17,6 +17,7 @@ day4 = { path = "../day4" }
 day5 = { path = "../day5" }
 day6 = { path = "../day6" }
 day7 = { path = "../day7" }
+day8 = { path = "../day8" }
 errors = { path = "../errors" }
 minus1 = { path = "../minus1" }
 utilities = { path = "../utilities" }

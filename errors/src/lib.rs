@@ -15,6 +15,7 @@ pub enum ApiError {
     HyperError(hyper::Error),
     HttpError(HyperHttpError),
     ConversionError(FromUtf8Error),
+    ReqwestError(reqwest::Error),
 }
 
 // implement the Display trait for the ReindeerError type
@@ -25,6 +26,7 @@ impl Display for ApiError {
             ApiError::HyperError(err) => write!(f, "Hyper error: {}", err),
             ApiError::HttpError(err) => write!(f, "HTTP error: {}", err),
             ApiError::ConversionError(err) => write!(f, "Conversion error: {}", err),
+            ApiError::ReqwestError(err) => write!(f, "Reqwest error: {}", err),
         }
     }
 }
@@ -54,6 +56,13 @@ impl From<HyperHttpError> for ApiError {
 impl From<FromUtf8Error> for ApiError {
     fn from(err: FromUtf8Error) -> ApiError {
         ApiError::ConversionError(err)
+    }
+}
+
+// implement the From trait for the reqwest::Error type
+impl From<reqwest::Error> for ApiError {
+    fn from(err: reqwest::Error) -> ApiError {
+        ApiError::ReqwestError(err)
     }
 }
 

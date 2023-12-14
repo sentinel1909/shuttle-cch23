@@ -1,10 +1,11 @@
-// server/tests/day_5_challenge_endpointss.rs
+// server/tests/day_8_challenge_endpointss.rs
 
 // endpoint integration tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
 
-// tests for the day 5 challenge grinch endpoints
+// tests for the day 8 challenge decode_the_receipe endpoints
 
-mod day_5_challenge_endpoint_tests {
+mod day_8_challenge_endpoint_tests {
+
     // dependencies
     use cch23_sentinel1909::router::Router;
     use hyper::body;
@@ -18,13 +19,16 @@ mod day_5_challenge_endpoint_tests {
         Spawn::new(router)
     }
 
-    // test for the day 5 challenge count_grinch endpoint
+    // test the get_weight endpoint
     #[tokio::test]
-    async fn test_count_grinch() {
+    async fn test_get_weight() {
+
+        // spawn a router for testing
         let mut mock = spawn_router();
 
+        // create a request
         let request = Request::builder()
-            .uri("/5/grinch")
+            .uri("/8/weight/25")
             .method("GET")
             .body(Body::empty())
             .unwrap();
@@ -33,9 +37,8 @@ mod day_5_challenge_endpoint_tests {
         let response = response.await.unwrap();
         assert_eq!(response.status(), 200);
         let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(
-            body_bytes,
-            String::from("You're a mean one, Mr. Grinch!").as_bytes()
-        );
+        assert_eq!(body_bytes, "6".as_bytes())
+
     }
-}
+
+  }

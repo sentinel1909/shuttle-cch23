@@ -1,4 +1,4 @@
-// common/tests/day_4_challenge_endpointss.rs
+// server/tests/day_4_challenge_endpointss.rs
 
 // endpoint integration tests for the 2023 Shuttle Christmas Code Hunt Challenge solutions
 

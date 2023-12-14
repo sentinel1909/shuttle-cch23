@@ -6,6 +6,7 @@ use day4_endpoints::{get_contest_result, get_strength_result};
 use day5_endpoints::grinch;
 use day6_endpoints::count_elf;
 use day7_endpoints::{bake, decode_the_receipe};
+use day8_endpoints::get_weight;
 use errors::{bad_request, internal_server_error, not_found};
 use hyper::{Body, Request, Response};
 use minus1_endpoint::root;
@@ -61,7 +62,7 @@ impl Service<Request<Body>> for Router {
 
             // create a dynamic path based on the values in the vector
             if values.len() > 1 {
-                let _calibrate_url = values
+                let _dyn_path = values
                     .iter()
                     .map(|&value| value.to_string())
                     .collect::<Vec<String>>()
@@ -75,13 +76,13 @@ impl Service<Request<Body>> for Router {
                     Err(_) => internal_server_error(),
                 },
                 "/-1/error" => internal_server_error(),
-                _calibrate_url if method == "GET" && values.len() == 3 && values[0] == 1 => {
+                _dyn_path if method == "GET" && values.len() == 3 && values[0] == 1 => {
                     match calibrate_packet_ids(values) {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
                 }
-                _calibrate_url if method == "GET" && values.len() < 21 && values[0] == 1 => {
+                _dyn_path if method == "GET" && values.len() < 21 && values[0] == 1 => {
                     match calibrate_sled_ids(values) {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
@@ -124,7 +125,11 @@ impl Service<Request<Body>> for Router {
                         Ok(resp) => resp,
                         Err(_) => bad_request(),
                     }
-                }
+                },
+                "/8/weight/25" if method == "GET" => match get_weight(25).await {
+                    Ok(resp) => resp,
+                    Err(_) => bad_request(),
+                },
                 _ => not_found(),
             };
 

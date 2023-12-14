@@ -4,8 +4,9 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
 
 ## Overall Progress
 
-### 2023-12-12
-- Day 6, Tasks 1 and 2 are completed and pass my own local tests
-- CCH Validator does not pass because I haven't split up the Task 1/Task 2 output
+### 2023-12-13
+- implemented a hard coded version of the Day 8 endpoint which returns the sample data
+- need to make sure the /8/weight/<pokedex-number> endpoint is dynamic
+- have kind of painted myself into a corner with my current implementation, need to find a way to make it more robust
 
 
