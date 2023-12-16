@@ -4,10 +4,7 @@
 use crate::cch23service::Cch23Service;
 use tower::ServiceBuilder;
 
+// function to Shuttleize the main service
 pub fn startup_service() -> shuttle_tower::ShuttleTower<Cch23Service> {
-    let cch23_service = Cch23Service;
-
-    ServiceBuilder::new().service(&cch23_service);
-
-    Ok(cch23_service.into())
+    Ok(ServiceBuilder::new().service(Cch23Service).into())
 }

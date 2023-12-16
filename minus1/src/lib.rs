@@ -1,20 +1,7 @@
 // minus1/src/lib.rs
 
-// dependencies
-use hyper::{Body, Response, StatusCode};
+pub mod fake_error;
+pub mod root;
 
-// handler for the root "/" endpoint
-pub async fn root() -> Result<Response<Body>, StatusCode> {
-    Response::builder()
-        .status(200)
-        .body(Body::from(""))
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
-}
-
-// handler for the "/-1/error" endpoint
-pub async fn fake_error() -> Result<Response<Body>, StatusCode> {
-    Response::builder()
-        .status(500)
-        .body(Body::from(""))
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
-}
+pub use fake_error::*;
+pub use root::*;
