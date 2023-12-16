@@ -32,8 +32,9 @@ impl Service<Request<Body>> for Cch23Service {
     }
 
     fn call(&mut self, request: Request<Body>) -> Self::Future {
-       
-        let mut service = ServiceBuilder::new().layer(NormalizePathLayer::trim_trailing_slash()).service_fn(router);
+        let mut service = ServiceBuilder::new()
+            .layer(NormalizePathLayer::trim_trailing_slash())
+            .service_fn(router);
         let response = service.call(request);
         Box::pin(async move { Ok(response.await.unwrap()) })
     }
