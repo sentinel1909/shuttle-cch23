@@ -1,13 +1,10 @@
 // minus1/src/lib.rs
 
 // dependencies
-use errors::ApiError;
-use hyper::body::Body;
-use hyper::{Response, StatusCode};
+use hyper::{Body, Response, StatusCode};
 
-// the root "/" route
-pub fn root() -> Result<Response<Body>, ApiError> {
-    Ok(Response::builder()
-        .status(StatusCode::OK)
-        .body(Body::empty())?)
+// handler for the root "/" endpoint
+pub async fn root() -> Result<Response<Body>, StatusCode> {
+    let response = Response::new(Body::from(""));
+    Ok(response)
 }

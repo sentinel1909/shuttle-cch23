@@ -10,6 +10,5 @@ path = "src/lib.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-errors = { path = "../errors" }
 hyper = { version = "0.14.27", features = ["full"] }
-
+tower-util = "0.3.1"
