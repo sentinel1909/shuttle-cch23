@@ -20,6 +20,7 @@ day4 = { path = "../day4" }
 day5 = { path = "../day5"}
 day6 = { path = "../day6" }
 day7 = { path = "../day7" }
+day8 = { path = "../day8" }
 utilities = { path = "../utilities" }
 hyper = { version = "0.14.27", features = ["full"] }
 shuttle-runtime = { version = "0.35.1", default-features = false }

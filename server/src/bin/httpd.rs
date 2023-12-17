@@ -8,6 +8,7 @@ use day4_endpoints::svc_calculate_total_strength;
 use day5_endpoints::svc_mean_grinch;
 use day6_endpoints::svc_count_elf;
 use day7_endpoints::svc_decode_the_receipe;
+use day8_endpoints::svc_get_pokemon_weight;
 use hyper::Method;
 use minus1_endpoint::{svc_fake_error, svc_root};
 use std::{
@@ -50,6 +51,12 @@ async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
         Method::GET,
         "/7/decode",
         service_fn(svc_decode_the_receipe).boxed_clone(),
+    );
+
+    router.on(
+        Method::GET,
+        "/8/weight/25",
+        service_fn(svc_get_pokemon_weight).boxed_clone(),
     );
 
     let router = ServiceBuilder::new()
