@@ -1,12 +1,10 @@
 // minus1/src/root.rs
 
 // dependencies
-use hyper::{Body, Request, Response, StatusCode};
+use common_features::WebRequest;
+use std::convert::Infallible;
 
-// handler for the root "/" endpoint
-pub async fn root(_request: Request<Body>) -> Result<Response<Body>, StatusCode> {
-    Response::builder()
-        .status(200)
-        .body(Body::from(""))
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+// handler function for the root, index endpoint
+pub async fn svc_root(_request: WebRequest) -> Result<&'static str, Infallible> {
+    Ok("")
 }

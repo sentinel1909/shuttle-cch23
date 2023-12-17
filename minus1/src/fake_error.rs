@@ -1,12 +1,11 @@
 // minus1/src/fake_error.rs
 
 // dependencies
-use hyper::{Body, Request, Response, StatusCode};
+use common_features::WebRequest;
+use hyper::StatusCode;
+use std::convert::Infallible;
 
-// handler for the "/-1/error" endpoint
-pub async fn fake_error(_request: Request<Body>) -> Result<Response<Body>, StatusCode> {
-    Response::builder()
-        .status(500)
-        .body(Body::from("Internal Server Error"))
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+// handler function for the root, index endpoint
+pub async fn svc_fake_error(_request: WebRequest) -> Result<StatusCode, Infallible> {
+    Ok(StatusCode::INTERNAL_SERVER_ERROR)
 }
