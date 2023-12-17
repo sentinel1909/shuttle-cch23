@@ -271,6 +271,7 @@ dependencies = [
  "serde_json",
  "shuttle-runtime",
  "shuttle-tower",
+ "sync_wrapper",
  "tokio",
  "tower",
  "tower-http",
