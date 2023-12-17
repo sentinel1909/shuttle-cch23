@@ -1,34 +1,64 @@
 // src/bin/httpd.rs
 
+use std::{
+    convert::Infallible,
+    future::Future,
+    pin::Pin,
+    sync::{Arc, Mutex},
+    task::{Context, Poll},
+};
+
 // dependences
 use cch23_sentinel1909_server::router::Router;
-use hyper::{Method, Server};
-use minus1_endpoint::{svc_root, svc_fake_error};
-use std::net::SocketAddr;
-use tower::{make::Shared, service_fn, ServiceBuilder, ServiceExt};
+use common_features::{WebRequest, WebResponse};
+use hyper::Method;
+use minus1_endpoint::{svc_fake_error, svc_root};
+use sync_wrapper::SyncFuture;
+use tower::{service_fn, util::BoxCloneService, ServiceBuilder, ServiceExt};
 use tower_http::normalize_path::NormalizePathLayer;
 
 // function to Shuttleize the main service
 #[shuttle_runtime::main]
-async fn main() -> shuttle_tower::ShuttleTower<Router> {
+async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
     let mut router = Router::default();
 
     router.on(Method::GET, "/", service_fn(svc_root).boxed_clone());
-    router.on(Method::GET, "/-1/error", service_fn(svc_fake_error).boxed_clone());
+    router.on(
+        Method::GET,
+        "/-1/error",
+        service_fn(svc_fake_error).boxed_clone(),
+    );
 
-    ServiceBuilder::new()
+    let router = ServiceBuilder::new()
         .layer(NormalizePathLayer::trim_trailing_slash())
-        .service(router);
+        .service(router)
+        .boxed_clone();
 
-    // let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
+    let shared_router = SharedRouter {
+        router: Arc::new(Mutex::new(router)),
+    };
 
-    // let make_service = Shared::new(hyper_service);
+    Ok(shared_router.into())
+}
 
-    // let server = Server::bind(&addr).serve(make_service);
+#[derive(Clone)]
+struct SharedRouter {
+    router: Arc<Mutex<BoxCloneService<WebRequest, WebResponse, Infallible>>>,
+}
 
-    // if let Err(e) = server.await {
-    //    eprintln!("server error: {}", e);
-    // }
+impl tower::Service<WebRequest> for SharedRouter {
+    type Response = WebResponse;
+    type Error = Infallible;
+    type Future =
+        SyncFuture<Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>>;
 
-    Ok(router.into())
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, req: hyper::Request<hyper::Body>) -> Self::Future {
+        let router = self.router.lock().unwrap().clone();
+        tokio::pin!(router);
+        SyncFuture::new(router.call(req))
+    }
 }
