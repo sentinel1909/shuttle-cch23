@@ -1,15 +1,17 @@
 [package]
-name = "minus1"
+name = "day7"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "minus1_endpoint"
-path = "src/lib.rs"
+name = "day7_endpoints"
+src = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+base64 = "0.21.5"
 common = { path = "../common" }
+domain = { path = "../domain"}
 hyper = { version = "0.14.27", features = ["full"] }
-tower = { version = "0.4.4", features = [ "full" ] }
+serde_json = "1.0.108"

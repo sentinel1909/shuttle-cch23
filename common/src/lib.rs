@@ -48,6 +48,16 @@ impl IntoWebResponse for &'static str {
     }
 }
 
+impl IntoWebResponse for String {
+    fn into_web_response(self) -> WebResponse {
+        Response::builder()
+            .status(StatusCode::OK)
+            .header(CONTENT_TYPE, HeaderValue::from_static("text/plain"))
+            .body(Body::from(self))
+            .expect("the string web response to be built")
+    }
+}
+
 impl IntoWebResponse for Box<dyn std::error::Error> {
     fn into_web_response(self) -> WebResponse {
         Response::builder()

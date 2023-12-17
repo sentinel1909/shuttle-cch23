@@ -1,5 +1,15 @@
 // src/bin/httpd.rs
 
+// dependences
+use cch23_sentinel1909_server::router::Router;
+use common_features::{WebRequest, WebResponse};
+use day1_endpoints::svc_calibrate_packet_ids;
+use day4_endpoints::svc_calculate_total_strength;
+use day5_endpoints::svc_mean_grinch;
+use day6_endpoints::svc_count_elf;
+use day7_endpoints::svc_decode_the_receipe;
+use hyper::Method;
+use minus1_endpoint::{svc_fake_error, svc_root};
 use std::{
     convert::Infallible,
     future::Future,
@@ -7,12 +17,6 @@ use std::{
     sync::{Arc, Mutex},
     task::{Context, Poll},
 };
-
-// dependences
-use cch23_sentinel1909_server::router::Router;
-use common_features::{WebRequest, WebResponse};
-use hyper::Method;
-use minus1_endpoint::{svc_fake_error, svc_root};
 use sync_wrapper::SyncFuture;
 use tower::{service_fn, util::BoxCloneService, ServiceBuilder, ServiceExt};
 use tower_http::normalize_path::NormalizePathLayer;
@@ -27,6 +31,25 @@ async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
         Method::GET,
         "/-1/error",
         service_fn(svc_fake_error).boxed_clone(),
+    );
+    router.on(
+        Method::GET,
+        "/1/4/8",
+        service_fn(svc_calibrate_packet_ids).boxed_clone(),
+    );
+    router.on(
+        Method::POST,
+        "/4/strength",
+        service_fn(svc_calculate_total_strength).boxed_clone(),
+    );
+    router.on(Method::GET, "/5", service_fn(svc_mean_grinch).boxed_clone());
+
+    router.on(Method::POST, "/6", service_fn(svc_count_elf).boxed_clone());
+
+    router.on(
+        Method::GET,
+        "/7/decode",
+        service_fn(svc_decode_the_receipe).boxed_clone(),
     );
 
     let router = ServiceBuilder::new()
