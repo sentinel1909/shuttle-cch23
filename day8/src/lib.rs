@@ -14,11 +14,13 @@ pub async fn svc_get_pokemon_weight(request: WebRequest) -> Result<String, Infal
     // create a reqwest client
     let client = Client::new();
 
+    // parse the path segments from the incoming request, return a vector with the split path segments
     let segments = parameter_extractor(request.uri().path());
 
+    // desired pokedex number is the 2nd parameter
     let pokedex_number = segments[1];
 
-    // get the weight in kilograms of the Pokemon
+    // get the weight in hectograms of the Pokemon
     let pokemon = client
         .get(&format!(
             "https://pokeapi.co/api/v2/pokemon/{}",
@@ -31,7 +33,7 @@ pub async fn svc_get_pokemon_weight(request: WebRequest) -> Result<String, Infal
         .await
         .unwrap();
 
-    // create a response body
+    // create a response body, convert the weight to kilograms
     let response_msg = (pokemon.weight / 10f32).to_string();
 
     // return the response

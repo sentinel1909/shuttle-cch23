@@ -441,7 +441,7 @@ dependencies = [
 
 [[package]]
 name = "day11"
-version = "0.1.0"
+version = "11.1.0"
 dependencies = [
  "common",
  "utilities",
@@ -477,22 +477,20 @@ dependencies = [
 
 [[package]]
 name = "day7"
-version = "0.1.0"
+version = "7.1.0"
 dependencies = [
  "base64",
  "common",
  "domain",
- "hyper",
  "serde_json",
 ]
 
 [[package]]
 name = "day8"
-version = "0.1.0"
+version = "8.1.0"
 dependencies = [
  "common",
  "domain",
- "hyper",
  "reqwest",
  "serde_json",
  "utilities",
@@ -2639,6 +2637,7 @@ name = "utilities"
 version = "0.1.0"
 dependencies = [
  "common",
+ "hyper",
  "nom",
 ]
 

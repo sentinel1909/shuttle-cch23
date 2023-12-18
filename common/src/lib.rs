@@ -3,7 +3,7 @@
 // dependencies
 use hyper::{
     body::Body,
-    header::{HeaderValue, CONTENT_TYPE, CONTENT_LENGTH},
+    header::{HeaderValue, CONTENT_LENGTH, CONTENT_TYPE},
     Request, Response, StatusCode,
 };
 use std::convert::Infallible;

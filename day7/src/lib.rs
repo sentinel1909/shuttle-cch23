@@ -1,4 +1,4 @@
-// day6/src/lib.rs
+// day7/src/lib.rs
 
 // 2023 Shuttle Christmas Code Hunt - Day 7 Challenge Endpoints
 
