@@ -34,5 +34,6 @@ impl Router {
                 .map_err(IntoWebResponse::into_web_response),
         );
         self.endpoints.insert((method, endpoint), svc);
+        self.parameters.push(0);
     }
 }

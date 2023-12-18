@@ -49,7 +49,6 @@ impl tower::Service<WebRequest> for SharedRouter {
 #[shuttle_runtime::main]
 async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
     let mut router = Router::default();
-
     router.on(
         Method::GET,
         "/".to_string(),

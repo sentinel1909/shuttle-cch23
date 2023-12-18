@@ -67,6 +67,7 @@ impl IntoWebResponse for PngImage {
         Response::builder()
             .status(StatusCode::OK)
             .header(CONTENT_TYPE, HeaderValue::from_static("image/png"))
+            .header(CONTENT_LENGTH, HeaderValue::from_static("empty"))
             .body(Body::empty())
             .expect("the png image web response to be built")
     }
