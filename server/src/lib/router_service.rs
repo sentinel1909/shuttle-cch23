@@ -9,6 +9,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use tower::{Service, ServiceExt};
+use utilities::parameter_extractor;
 
 // implement the Tower Service trait for the router type
 impl Service<WebRequest> for Router {
@@ -22,9 +23,10 @@ impl Service<WebRequest> for Router {
     }
 
     fn call(&mut self, request: WebRequest) -> Self::Future {
+        self.parameters = parameter_extractor(request.uri().path());
         match self
             .endpoints
-            .get(&(request.method().clone(), request.uri().path()))
+            .get(&(request.method().clone(), request.uri().path().to_string()))
         {
             Some(svc) => {
                 let mut svc = svc.clone();

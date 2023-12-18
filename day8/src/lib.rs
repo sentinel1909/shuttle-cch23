@@ -7,23 +7,14 @@ use common_features::WebRequest;
 use domain::PokemonWeight;
 use reqwest::Client;
 use std::convert::Infallible;
+use utilities::parameter_extractor;
 
 // endpoint which returns the weight in kilograms of a Pokemon
 pub async fn svc_get_pokemon_weight(request: WebRequest) -> Result<String, Infallible> {
     // create a reqwest client
     let client = Client::new();
 
-    let path_segments: Vec<Result<i32, _>> = request
-        .uri()
-        .path()
-        .split('/')
-        .map(|segment| segment.parse::<i32>())
-        .collect();
-
-    let segments: Vec<i32> = path_segments
-        .into_iter()
-        .filter_map(|path_segment| path_segment.ok())
-        .collect();
+    let segments = parameter_extractor(request.uri().path());
 
     let pokedex_number = segments[1];
 

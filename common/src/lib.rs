@@ -3,7 +3,7 @@
 // dependencies
 use hyper::{
     body::Body,
-    header::{HeaderValue, CONTENT_TYPE},
+    header::{HeaderValue, CONTENT_TYPE, CONTENT_LENGTH},
     Request, Response, StatusCode,
 };
 use std::convert::Infallible;
@@ -11,6 +11,10 @@ use std::convert::Infallible;
 // type aliases
 pub type WebRequest = Request<Body>;
 pub type WebResponse = Response<Body>;
+
+pub struct PngImage {
+    pub size: u64,
+}
 
 // IntoWebResponse trait
 pub trait IntoWebResponse {
@@ -55,6 +59,16 @@ impl IntoWebResponse for String {
             .header(CONTENT_TYPE, HeaderValue::from_static("text/plain"))
             .body(Body::from(self))
             .expect("the string web response to be built")
+    }
+}
+
+impl IntoWebResponse for PngImage {
+    fn into_web_response(self) -> WebResponse {
+        Response::builder()
+            .status(StatusCode::OK)
+            .header(CONTENT_TYPE, HeaderValue::from_static("image/png"))
+            .body(Body::empty())
+            .expect("the png image web response to be built")
     }
 }
 

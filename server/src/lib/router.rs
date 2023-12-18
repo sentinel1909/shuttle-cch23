@@ -8,13 +8,14 @@ use tower::util::BoxCloneService;
 use tower::ServiceExt;
 
 // type aliases for our router
-type RouterKey = (Method, &'static str);
+type RouterKey = (Method, String);
 type RouterService = BoxCloneService<WebRequest, WebResponse, WebResponse>;
 
 // a struct type to represent a router
 #[derive(Debug, Default, Clone)]
 pub struct Router {
     pub endpoints: HashMap<RouterKey, RouterService>,
+    pub parameters: Vec<i32>,
 }
 
 // implement the Router type
@@ -22,7 +23,7 @@ impl Router {
     pub fn on<R, E>(
         &mut self,
         method: Method,
-        endpoint: &'static str,
+        endpoint: String,
         svc: BoxCloneService<WebRequest, R, E>,
     ) where
         R: IntoWebResponse + 'static,

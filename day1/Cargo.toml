@@ -13,3 +13,4 @@ path = "src/lib.rs"
 common = { path = "../common" }
 hyper = { version = "0.14.27", features = ["full"] }
 tower = { version = "0.4.4", features = [ "full" ] }
+utilities = { path = "../utilities" }

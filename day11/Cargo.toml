@@ -1,14 +1,15 @@
 [package]
-name = "utilities"
+name = "day11"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "utilities"
+name = "day11_endpoints"
 path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 common = { path = "../common" }
-nom = "7.1.3"
+utilities = { path = "../utilities" }
+

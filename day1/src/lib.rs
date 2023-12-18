@@ -5,19 +5,11 @@
 // dependencies
 use common_features::WebRequest;
 use std::convert::Infallible;
+use utilities::parameter_extractor;
 
 // Task 1: Calibrate the incoming packet IDs
 pub async fn svc_calibrate_packet_ids(request: WebRequest) -> Result<String, Infallible> {
-    let path_segments: Vec<Result<i32, _>> = request
-        .uri()
-        .path()
-        .split('/')
-        .map(|segment| segment.parse::<i32>())
-        .collect();
-    let segments: Vec<i32> = path_segments
-        .into_iter()
-        .filter_map(|path_segment| path_segment.ok())
-        .collect();
+    let segments = parameter_extractor(request.uri().path());
     let packet1 = segments[1];
     let packet2 = segments[2];
 
