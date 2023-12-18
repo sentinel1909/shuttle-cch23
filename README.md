@@ -9,4 +9,10 @@ This repo is the home for my completed solutions for the 2023 Christmas Code Hun
 - re-implemented the "Minus 1" challenge and passed the CCH23 Validator
 - had to remove Shuttle, just running a local server spun up within the app
 
+### 2023-12-17
+- now working again with Shuttle, thanks to kindness from Discord
+- caught up to where the original main branch basically was, in terms of progress
+- started to work on Day 11
+- dynamic paths still causing lots of difficulty, needed for Days 1 and 8, plus maybe others in the future
+
 
