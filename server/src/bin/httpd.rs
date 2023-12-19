@@ -49,53 +49,41 @@ impl tower::Service<WebRequest> for SharedRouter {
 #[shuttle_runtime::main]
 async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
     let mut router = Router::default();
+    router.on(Method::GET, "/", service_fn(svc_root).boxed_clone());
     router.on(
         Method::GET,
-        "/".to_string(),
-        service_fn(svc_root).boxed_clone(),
-    );
-    router.on(
-        Method::GET,
-        "/-1/error".to_string(),
+        "/-1/error",
         service_fn(svc_fake_error).boxed_clone(),
     );
     router.on(
         Method::GET,
-        format!("/{}/{}/{}", 1, 4, 8),
+        "/1/:packet1/:packet2",
         service_fn(svc_calibrate_packet_ids).boxed_clone(),
     );
     router.on(
         Method::POST,
-        "/4/strength".to_string(),
+        "/4/strength",
         service_fn(svc_calculate_total_strength).boxed_clone(),
     );
-    router.on(
-        Method::GET,
-        "/5".to_string(),
-        service_fn(svc_mean_grinch).boxed_clone(),
-    );
+    router.on(Method::GET, "/5", service_fn(svc_mean_grinch).boxed_clone());
 
-    router.on(
-        Method::POST,
-        "/6".to_string(),
-        service_fn(svc_count_elf).boxed_clone(),
-    );
+    router.on(Method::POST, "/6", service_fn(svc_count_elf).boxed_clone());
 
     router.on(
         Method::GET,
-        "/7/decode".to_string(),
+        "/7/decode",
         service_fn(svc_decode_the_receipe).boxed_clone(),
     );
 
     router.on(
         Method::GET,
-        format!("/8/weight/{}", 25),
+        "/8/weight/:pokedex",
         service_fn(svc_get_pokemon_weight).boxed_clone(),
     );
 
     router.on(
         Method::GET,
-        "/11/assets/decoration.png".to_string(),
+        "/11/assets/decoration.png",
         service_fn(svc_static_files).boxed_clone(),
     );
 
