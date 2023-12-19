@@ -3,7 +3,7 @@
 // dependencies
 use hyper::{
     body::Body,
-    header::{HeaderValue, CONTENT_LENGTH, CONTENT_TYPE},
+    header::{HeaderValue, CONTENT_TYPE},
     Request, Response, StatusCode,
 };
 use std::convert::Infallible;
@@ -11,10 +11,6 @@ use std::convert::Infallible;
 // type aliases
 pub type WebRequest = Request<Body>;
 pub type WebResponse = Response<Body>;
-
-pub struct PngImage {
-    pub size: u64,
-}
 
 // IntoWebResponse trait
 pub trait IntoWebResponse {
@@ -62,14 +58,23 @@ impl IntoWebResponse for String {
     }
 }
 
-impl IntoWebResponse for PngImage {
+impl IntoWebResponse for Vec<u8> {
     fn into_web_response(self) -> WebResponse {
         Response::builder()
             .status(StatusCode::OK)
             .header(CONTENT_TYPE, HeaderValue::from_static("image/png"))
-            .header(CONTENT_LENGTH, HeaderValue::from_static("empty"))
-            .body(Body::empty())
-            .expect("the png image web response to be built")
+            .body(Body::from(self))
+            .expect("the Vec<u8> response to be built")
+    }
+}
+
+impl IntoWebResponse for std::io::Error {
+    fn into_web_response(self) -> WebResponse {
+        Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .header(CONTENT_TYPE, HeaderValue::from_static("text/plain"))
+            .body(Body::from(self.to_string()))
+            .expect("the IO error web response to be built")
     }
 }
 

@@ -3,24 +3,23 @@
 // 2023 Shuttle Christmas Code Hunt - Day 11 Challenge Endpoints
 
 // dependencies
-use common_features::{PngImage, WebRequest};
-use std::convert::Infallible;
-use std::fs;
+use common_features::WebRequest;
+use std::fs::File;
+use std::io::Read;
 
 // a constant which represents the file path
 const FILE: &str = "/home/jeff/dev/source/repos/rust/shuttle-cch23/day11/assets/decoration.png";
 
 // endpoint handler to return a static image of Christmas decorations
-pub async fn svc_static_files(_request: WebRequest) -> Result<PngImage, Infallible> {
-    // get the metadata for the decorations.png file
-    let metadata = fs::metadata(FILE).unwrap();
+pub async fn svc_static_files(_request: WebRequest) -> Result<Vec<u8>, std::io::Error> {
+    // read in the image file
+    let file = File::open(FILE);
 
-    // get the byte length of the Christmas decorations image
-    let byte_length = metadata.len();
+    // create a buffer to store the file
+    let mut buf = Vec::new();
 
-    // create an instance of the PngImage type, save the size in its "size" field
-    let png_image = PngImage { size: byte_length };
+    // read the image file into the buffer
+    file?.read_to_end(&mut buf)?;
 
-    // return the struct
-    Ok(png_image)
+    Ok(buf)
 }
