@@ -88,9 +88,9 @@ async fn main() -> shuttle_tower::ShuttleTower<SharedRouter> {
     );
 
     let router = ServiceBuilder::new()
+        .boxed_clone()
         .layer(NormalizePathLayer::trim_trailing_slash())
-        .service(router)
-        .boxed_clone();
+        .service(router);
 
     let shared_router = SharedRouter {
         router: Arc::new(Mutex::new(router)),
