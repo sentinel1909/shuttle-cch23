@@ -55,7 +55,7 @@ impl RouterEndpoint {
 
 // an enum to represent a path fragment
 #[derive(Debug, Clone)]
-enum PathFragment {
+pub enum PathFragment {
     Literal(&'static str),
     Param(&'static str),
 }

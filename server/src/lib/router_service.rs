@@ -14,7 +14,7 @@ use tower::{Service, ServiceExt};
 impl Service<WebRequest> for Router {
     type Response = WebResponse;
     type Error = Infallible;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + 'static >>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + 'static>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -27,13 +27,22 @@ impl Service<WebRequest> for Router {
         for endpoint in self.endpoints.iter() {
             if let Some(params) = endpoint.matcher.match_request(method, path.as_ref()) {
                 request.extensions_mut().insert(params);
-                let svc = endpoint.service.clone();
-                let fut = async move { svc.ready().await.call(req).await };
+                let mut svc = endpoint.service.clone();
+                let fut = async move {
+                    let svc = match svc.ready().await {
+                        Ok(svc) => svc,
+                        Err(_) => return Ok(StatusCode::INTERNAL_SERVER_ERROR.into_web_response()),
+                    };
+                    match svc.call(request).await {
+                        Ok(resp) => Ok(resp),
+                        Err(resp) => Ok(resp),
+                    }
+                };
                 return Box::pin(fut);
             }
         }
 
-        let fut = async move { Err(StatusCode::NOT_FOUND.into_web_response()) };
+        let fut = async move { Ok(StatusCode::NOT_FOUND.into_web_response()) };
         Box::pin(fut) 
         
     }
